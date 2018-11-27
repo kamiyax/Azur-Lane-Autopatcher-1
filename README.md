@@ -7,11 +7,11 @@ Not even finished.
   - Make sure to enable `Add to PATH` option during the installation
   
 ## 3rdparty
-This folder contains the 3rd party tool which needed by the autopatcher. Copy the said folder and put it in the same directory alongside the autopatcher binary.
+This folder contains 3rd party tools which needed by the autopatcher. Put the said folder alongside autopatcher
 
-If you are using the old version of autopatcher, move all the contents inside the subdirectories and put it in one same directory.
+If you are using the old version of autopatcher, move all contents within sub-directories to the root directory (3rdparty).
 
-### Example of directory tree
+### Example of directory tree for old version of autopatcher
 ```
 | 3rdparty
 |- jit
