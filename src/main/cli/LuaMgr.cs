@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Azurlane
@@ -37,7 +34,7 @@ namespace Azurlane
 
             // Let's declare our binary's state as none
             var state = State.None;
-            
+
             /* If (3rd byte of bytes) is 0x80
              * If true, then the binary is encrypted
              */
@@ -127,7 +124,7 @@ namespace Azurlane
                         if (!is_stripped)
                         {
                             var length = reader.ReadUleb128();
-                            var name = Encoding.UTF8.GetString(reader.ReadBytes((int) length));
+                            var name = Encoding.UTF8.GetString(reader.ReadBytes((int)length));
                         }
 
                         while (reader.BaseStream.Position < reader.BaseStream.Length)
@@ -147,19 +144,19 @@ namespace Azurlane
                             var numeric_constants_count = reader.ReadUleb128();
                             var instructions_count = reader.ReadUleb128();
 
-                            var start = (int) reader.BaseStream.Position;
+                            var start = (int)reader.BaseStream.Position;
 
                             // If the "state" of the binary is encrypted and our "task" is to "decrypt"
                             if (state == State.Encrypted && task == Tasks.Decrypt)
                             {
                                 bytes[3] = 0x02;
-                                bytes = Unlock(start, bytes, (int) instructions_count);
+                                bytes = Unlock(start, bytes, (int)instructions_count);
                             }
                             // If the "state" of the binary is decrypted and our "task" is to "encrypt"
                             else if (state == State.Decrypted && task == Tasks.Encrypt)
                             {
                                 bytes[3] = 0x80;
-                                bytes = Lock(start, bytes, (int) instructions_count);
+                                bytes = Lock(start, bytes, (int)instructions_count);
                             }
                             // Abort if neither of them
                             else break;
