@@ -30,7 +30,7 @@ namespace Azurlane
         /// <param name="message"></param>
         /// /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogDebug(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm:ss}][DEBUG]> {message}", writeLine, arg);
+        internal static void LogDebug(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][DEBUG]> {message}", writeLine, arg);
 
         internal static void LogException(string message, Exception exception)
         {
@@ -60,7 +60,7 @@ namespace Azurlane
         /// <param name="message"></param>
         /// /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogInfo(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm:ss}][INFO]> {message}", writeLine, arg);
+        internal static void LogInfo(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][INFO]> {message}", writeLine, arg);
 
         /// <summary>
         /// A better version of Console.WriteLine
