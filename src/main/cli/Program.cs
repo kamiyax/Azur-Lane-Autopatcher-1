@@ -209,7 +209,7 @@ namespace Azurlane
 
         private static bool OpContains(string key) => _currentOption.ToString().Contains(key);
 
-        private static bool OpContains(string key1, string key2) => OpContains(key1) && OpContains(key2);
+        //private static bool OpContains(string key1, string key2) => OpContains(key1) && OpContains(key2);
 
         private static void SetOption(Options option, bool devMode = false)
         {

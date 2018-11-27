@@ -40,7 +40,7 @@ namespace Azurlane
                 if (task == Tasks.Encrypt)
                 {
                     // Then abort, because the binary has already in encrypted state
-                    Utils.LogInfo("{0} is already encrypted... <aborted>", true, Path.GetFileName(lua));
+                    Utils.LogInfo("{0} is already encrypted... <aborted>", true, Path.GetFileName(lua).Replace(".txt", string.Empty));
                     return;
                 }
                 // Or, if our "task" is to "decompile" the binary
@@ -62,7 +62,7 @@ namespace Azurlane
                 if (task == Tasks.Decrypt)
                 {
                     // Then abort, because the binary has already in decrypted state
-                    Utils.LogInfo("{0} is already decrypted... <aborted>", true, Path.GetFileName(lua));
+                    Utils.LogInfo("{0} is already decrypted... <aborted>", true, Path.GetFileName(lua).Replace(".txt", string.Empty));
                     return;
                 }
                 // Then continue if not aborted
@@ -112,7 +112,7 @@ namespace Azurlane
             try
             {
                 // Send a logInfo to terminal indicating that we're decrypting/encrypting the binary
-                Utils.LogInfo("{0} {1}...", false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(lua));
+                Utils.LogInfo("{0} {1}...", false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(lua).Replace(".txt", string.Empty));
                 using (var stream = new MemoryStream(bytes))
                 {
                     using (var reader = new BinaryReader(stream))
@@ -173,7 +173,7 @@ namespace Azurlane
             {
                 /* Call exception logger
                  * This method's function is to log unexpected error and write it into a file. */
-                Utils.LogException($"Exception detected (Executor.1) during {(task == Tasks.Decrypt ? "decrypting" : "encrypting")} {Path.GetFileName(lua)}", e);
+                Utils.LogException($"Exception detected (Executor.1) during {(task == Tasks.Decrypt ? "decrypting" : "encrypting")} {Path.GetFileName(lua).Replace(".txt", string.Empty)}", e);
             }
             finally
             {
@@ -206,14 +206,14 @@ namespace Azurlane
                 luaPath = Path.Combine(PathMgr.Local(task == Tasks.Decompile ? "decompiled_lua" : "recompiled_lua"), Path.GetFileName(lua));
             }
 
-            Utils.LogInfo("{0} {1}...", false, task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua));
+            Utils.LogInfo("{0} {1}...", false, task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua).Replace(".txt", string.Empty));
             try
             {
                 Utils.Command(task == Tasks.Decompile ? $"python main.py -f \"{lua}\" -o \"{luaPath}\"" : $"luajit.exe -b \"{lua}\" \"{luaPath}\"");
             }
             catch (Exception e)
             {
-                Utils.LogException($"Exception detected (Executor.2) during {(task == Tasks.Decompile ? "decompiling" : "recompiling")} {Path.GetFileName(lua)}", e);
+                Utils.LogException($"Exception detected (Executor.2) during {(task == Tasks.Decompile ? "decompiling" : "recompiling")} {Path.GetFileName(lua).Replace(".txt", string.Empty)}", e);
             }
             finally
             {

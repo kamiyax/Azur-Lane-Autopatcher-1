@@ -11,7 +11,7 @@ namespace Azurlane
         internal static string ThirdpartyFolder;
 
         private static readonly Dictionary<string, string> Instance;
-        
+
         static ConfigMgr()
         {
             // We make sure whether the instance of ConfigMgr is null
