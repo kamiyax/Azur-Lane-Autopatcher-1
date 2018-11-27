@@ -4,15 +4,8 @@ using System.Text;
 
 namespace Azurlane
 {
-    /// <summary>
-    /// LuaMgr
-    /// Anything related to working with Lua
-    /// </summary>
     internal static class LuaMgr
     {
-        /// <summary>
-        /// State
-        /// </summary>
         internal enum State
         {
             None,
@@ -21,9 +14,7 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// Initializer
-        /// In this method, we're checking whether the binary is encrypted, decrypted or invalid/damaged
-        /// before processing the binary
+        /// [Initializer] This method is used to check whether the binary is encrypted, decrypted or invalid/damaged
         /// </summary>
         /// <param name="lua"></param>
         /// <param name="task"></param>
@@ -98,8 +89,7 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// Executor.1
-        /// In this method, we're decrypting/encrypting the binary
+        /// [Executor.1] This method is used to decrypt/encrypt the binary
         /// </summary>
         /// <param name="lua"></param>
         /// <param name="bytes"></param>
@@ -176,8 +166,7 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// Executor.2
-        /// In this method, we're decompiling/recompiling the binary
+        /// [Executor.2] This method is used to decompile/recompile the binary
         /// </summary>
         /// <param name="lua"></param>
         /// <param name="task"></param>
@@ -194,13 +183,7 @@ namespace Azurlane
             }
         }
 
-        /// <summary>
-        /// Lock
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="bytes"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
+        
         private static byte[] Lock(int start, byte[] bytes, int count)
         {
             var result = start;
@@ -216,12 +199,7 @@ namespace Azurlane
             while (v2 != count);
             return bytes;
         }
-
-        /// <summary>
-        /// ReadUleb128
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns></returns>
+        
         private static uint ReadUleb128(this BinaryReader reader)
         {
             // ljd\util\binstream.py + Perfare
@@ -241,14 +219,7 @@ namespace Azurlane
             }
             return value;
         }
-
-        /// <summary>
-        /// Unlock
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="bytes"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
+        
         private static byte[] Unlock(int start, byte[] bytes, int count)
         {
             var result = start;
