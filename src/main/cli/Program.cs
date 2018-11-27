@@ -57,14 +57,14 @@ namespace Azurlane
                 {"encrypt", "Encrypt AssetBundle", v => SetOption(Options.AssetBundleEncrypt)},
                 {"unpack", "Unpack AssetBundle", v => SetOption(Options.AssetBundleUnpack)},
                 {"repack", "Repack AssetBundle", v => SetOption(Options.AssetBundleRepack)},
-                {"u2|unlock2", "Decrypt Lua", v => SetOption(Options.LuaUnlock, true)},
-                {"l2|lock2", "Encrypt Lua", v => SetOption(Options.LuaLock, true)},
-                {"d2|decompile2", "Decompile Lua", v => SetOption(Options.LuaDecompile, true)},
-                {"r2|recompile2", "Recompile Lua", v => SetOption(Options.LuaRecompile, true)},
-                {"decrypt2", "Decrypt AssetBundle", v => SetOption(Options.AssetBundleDecrypt, true)},
-                {"encrypt2", "Encrypt AssetBundle", v => SetOption(Options.AssetBundleEncrypt, true)},
-                {"unpack2", "Unpack AssetBundle", v => SetOption(Options.AssetBundleUnpack, true)},
-                {"repack2", "Repack AssetBundle", v => SetOption(Options.AssetBundleRepack, true)},
+                {"dev1", "Decrypt Lua (Development Mode)", v => SetOption(Options.LuaUnlock, true)},
+                {"dev2", "Encrypt Lua (Development Mode)", v => SetOption(Options.LuaLock, true)},
+                {"dev3", "Decompile Lua (Development Mode)", v => SetOption(Options.LuaDecompile, true)},
+                {"dev4", "Recompile Lua (Development Mode)", v => SetOption(Options.LuaRecompile, true)},
+                {"dev5", "Decrypt AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleDecrypt, true)},
+                {"dev6", "Encrypt AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleEncrypt, true)},
+                {"dev7", "Unpack AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleUnpack, true)},
+                {"dev8", "Repack AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleRepack, true)},
                 {"<>", v => {
                     if (_currentOption == Options.None) {
                         showHelp = true;
@@ -197,7 +197,7 @@ namespace Azurlane
         /// <param name="options"></param>
         private static void Help(OptionSet options)
         {
-            Utils.WriteLine("[Info]> Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>");
+            Utils.WriteLine("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>");
             Console.WriteLine();
             Utils.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
