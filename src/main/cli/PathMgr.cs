@@ -3,10 +3,6 @@ using System.Reflection;
 
 namespace Azurlane
 {
-    /// <summary>
-    /// PathMgr
-    /// Anything related to Path/Location
-    /// </summary>
     internal static class PathMgr
     {
         internal static string Local(string path = null)

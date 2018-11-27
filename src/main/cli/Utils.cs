@@ -4,17 +4,11 @@ using System.IO;
 
 namespace Azurlane
 {
-    /// <summary>
-    /// Utils
-    /// Sometimes we want to simplify things
-    /// You can put it here
-    /// </summary>
     public class Utils
     {
         /// <summary>
-        /// Command
+        /// Run a command
         /// </summary>
-        /// <param name="argument"></param>
         internal static void Command(string argument)
         {
             using (var process = new Process())
@@ -31,9 +25,7 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// LogDebug
-        /// Send a message to the terminal with [Debug] prefix
-        /// Use this method for anything related to logging a debug (errors, etc)
+        /// Send a debug message to the terminal
         /// </summary>
         /// <param name="message"></param>
         /// <param name="arg"></param>
@@ -62,17 +54,14 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// LogInfo
-        /// Send a message to the terminal with [Info] prefix
-        /// Use this method for anything related to logging an information (status, etc)
+        /// Send an info message to the terminal
         /// </summary>
         /// <param name="message"></param>
         /// <param name="arg"></param>
         internal static void LogInfo(string message, params object[] arg) => WriteLine($@"[{DateTime.Now:HH:mm:ss}][Info]> {message}", arg);
 
         /// <summary>
-        /// WriteLine
-        /// We're using this instead of Console.WriteLine for the sake of convenience
+        /// A better version of Console.WriteLine
         /// </summary>
         /// <param name="message"></param>
         /// <param name="arg"></param>
