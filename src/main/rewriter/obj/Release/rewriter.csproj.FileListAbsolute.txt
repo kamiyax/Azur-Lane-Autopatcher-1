@@ -1,4 +1,0 @@
-E:\Documents\Git\blhx\src\main\build\Rewriter.exe
-E:\Documents\Git\blhx\src\main\rewriter\obj\Release\rewriter.csprojAssemblyReference.cache
-E:\Documents\Git\blhx\src\main\rewriter\obj\Release\rewriter.csproj.CoreCompileInputs.cache
-E:\Documents\Git\blhx\src\main\rewriter\obj\Release\Rewriter.exe
