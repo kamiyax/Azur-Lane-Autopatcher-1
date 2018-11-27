@@ -20,7 +20,7 @@ namespace Azurlane
     {
         internal static bool DevelopmentMode;
         internal static bool Ok = false;
-        private static bool Abort;
+        private static bool _abort;
 
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
 
@@ -103,7 +103,7 @@ namespace Azurlane
 
             if (missingCount > 0)
             {
-                Abort = true;
+                _abort = true;
                 Console.WriteLine();
                 Utils.Write("Aborted.", true);
             }
@@ -114,7 +114,7 @@ namespace Azurlane
             // Dependency checker
             Initialize();
             
-            if (Abort) return;
+            if (_abort) return;
 
             // Check whether arguments are valid by counting the length
             var showHelp = args.Length < 2;
