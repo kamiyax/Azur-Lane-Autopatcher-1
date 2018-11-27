@@ -1,0 +1,70 @@
+{
+	"manifest_version": 1,
+	"version": "kr-2018.11.25.01_test",
+
+	"host": [
+		"azurlane-kr.appspot.com",
+		"azurlane-kr2.appspot.com",
+		"blhx-kr.appspot.com",
+		"blhx-kr2.appspot.com"
+	],
+
+	"buttons": [
+		{
+			"name": "GodMode",
+			"type": "function",
+			"place": "primary",
+			"priority": 1,
+			"active": 1
+		},
+		{
+			"name": "WeakEnemy",
+			"type": "function",
+			"place": "primary",
+			"priority": 2,
+			"active": 1
+		},
+		{
+			"name": "GodMode+Damage",
+			"type": "function",
+			"place": "primary",
+			"priority": 3,
+			"active": 1
+		},
+		{
+			"name": "GodMode+Cooldown",
+			"type": "function",
+			"place": "primary",
+			"priority": 4,
+			"active": 1
+		},
+		{
+			"name": "GodMode+WeakEnemy",
+			"type": "function",
+			"place": "primary",
+			"priority": 5,
+			"active": 1
+		},
+		{
+			"name": "GodMode+Damage+Cooldown",
+			"type": "function",
+			"place": "primary",
+			"priority": 6,
+			"active": 1
+		},
+		{
+			"name": "GodMode+Damage+WeakEnemy",
+			"type": "function",
+			"place": "primary",
+			"priority": 7,
+			"active": 1
+		},
+		{
+			"name": "GodMode+Damage+Cooldown+WeakEnemy",
+			"type": "function",
+			"place": "primary",
+			"priority": 8,
+			"active": 1
+		}
+	]
+}

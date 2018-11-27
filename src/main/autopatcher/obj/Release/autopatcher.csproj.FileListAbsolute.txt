@@ -1,0 +1,4 @@
+E:\Documents\Git\blhx\src\main\build\Autopatcher.exe
+E:\Documents\Git\blhx\src\main\autopatcher\obj\Release\autopatcher.csprojAssemblyReference.cache
+E:\Documents\Git\blhx\src\main\autopatcher\obj\Release\autopatcher.csproj.CoreCompileInputs.cache
+E:\Documents\Git\blhx\src\main\autopatcher\obj\Release\Autopatcher.exe

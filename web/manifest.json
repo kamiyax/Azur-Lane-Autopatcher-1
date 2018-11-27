@@ -1,0 +1,29 @@
+{
+	"manifest_version": 1,
+	"version": "base-2018.11.25.01_test",
+
+	"universal_buttons": [
+		{
+			"name": "Replace Skin",
+			"type": "function",
+			"place": "secondary",
+			"priority": 1,
+			"active": 1
+		},
+		{
+			"name": "Get Update",
+			"uri": "undefined",
+			"type": "web",
+			"place": "secondary",
+			"priority": 2,
+			"active": 1
+		},
+		{
+			"name": "Clear Cache",
+			"type": "function",
+			"place": "secondary",
+			"priority": 3,
+			"active": 1
+		}
+	]
+}

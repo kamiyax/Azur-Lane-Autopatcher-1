@@ -1,0 +1,6 @@
+E:\Documents\Git\blhx\src\main\cli\obj\Release\cli.csprojAssemblyReference.cache
+E:\Documents\Git\blhx\src\main\cli\obj\Release\cli.csproj.CoreCompileInputs.cache
+E:\Documents\Git\blhx\src\main\build\cli.exe
+E:\Documents\Git\blhx\src\main\cli\obj\Release\Azurlane.Properties.Resources.resources
+E:\Documents\Git\blhx\src\main\cli\obj\Release\cli.csproj.GenerateResource.cache
+E:\Documents\Git\blhx\src\main\cli\obj\Release\cli.exe
