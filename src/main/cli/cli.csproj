@@ -46,6 +46,7 @@
     <Compile Include="AssetBundleMgr.cs" />
     <Compile Include="ConfigMgr.cs" />
     <Compile Include="LuaMgr.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="PathMgr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
