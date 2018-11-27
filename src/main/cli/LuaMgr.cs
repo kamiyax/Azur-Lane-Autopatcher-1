@@ -197,17 +197,19 @@ namespace Azurlane
         /// <param name="task"></param>
         private static void Execute(string lua, Tasks task)
         {
+            var luaPath = lua;
             if (!Program.DevelopmentMode)
             {
-                if (lua.ToLower().Contains("unity_assets_files")) lua = Path.Combine(PathMgr.Local("decrypted_lua"), Path.GetFileName(lua));
+                if (lua.ToLower().Contains("unity_assets_files"))
+                    lua = Path.Combine(PathMgr.Local("decrypted_lua"), Path.GetFileName(lua));
 
-                lua = Path.Combine(PathMgr.Local(task == Tasks.Decompile ? "decompiled_lua" : "recompiled_lua"), Path.GetFileName(lua));
+                luaPath = Path.Combine(PathMgr.Local(task == Tasks.Decompile ? "decompiled_lua" : "recompiled_lua"), Path.GetFileName(lua));
             }
 
-            Utils.LogInfo("{0} {1}...", true, task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua));
+            Utils.LogInfo("{0} {1}...", false, task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua));
             try
             {
-                Utils.Command(task == Tasks.Decompile ? $"python main.py -f \"{lua}\" -o \"{lua}\"" : $"luajit.exe -b \"{lua}\" \"{lua}\"");
+                Utils.Command(task == Tasks.Decompile ? $"python main.py -f \"{lua}\" -o \"{luaPath}\"" : $"luajit.exe -b \"{lua}\" \"{luaPath}\"");
             }
             catch (Exception e)
             {

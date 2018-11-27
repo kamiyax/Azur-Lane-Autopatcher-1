@@ -144,7 +144,7 @@ namespace Azurlane
                 {
                     if (!File.Exists(value) && !Directory.Exists(value))
                     {
-                        Utils.Write($@"A file or directory named {value} does not exists.");
+                        Utils.Write($@"A file or directory named {value} does not exists.", true);
                     }
                     if (File.Exists(value))
                     {
@@ -184,10 +184,10 @@ namespace Azurlane
             if (Ok && !OpContains(Options.AssetBundleRepack) && !OpContains(Options.AssetBundleDecrypt) && !OpContains(Options.AssetBundleEncrypt))
             {
                 Console.WriteLine();
-                Utils.Write($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done");
+                Utils.Write($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done", true);
 
                 if (!DevelopmentMode && !OpContains(Options.AssetBundleUnpack))
-                    Utils.Write("Success: {0} - Failed: {1}", LuaMgr.SuccessCount, LuaMgr.FailedCount);
+                    Utils.Write("Success: {0} - Failed: {1}", true, LuaMgr.SuccessCount, LuaMgr.FailedCount);
             }
         }
 
@@ -197,9 +197,9 @@ namespace Azurlane
         /// <param name="options"></param>
         private static void Help(OptionSet options)
         {
-            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>");
+            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
             Console.WriteLine();
-            Utils.Write("Options:");
+            Utils.Write("Options:", true);
             options.WriteOptionDescriptions(Console.Out);
         }
 
