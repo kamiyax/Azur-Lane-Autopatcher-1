@@ -136,14 +136,14 @@ namespace Azurlane
             if (Compare(bytes, Encrypt))
             {
                 // If = our "task" is to "encrypt" the binary
-                if (task == Tasks.Encrypt || task == Tasks.EncryptDevelopment)
+                if (task == Tasks.Encrypt)
                 {
                     // Then abort, because the binary has already in encrypted state
                     Utils.LogInfo("AssetBundle is already encrypted... <aborted>");
                     return;
                 }
                 // Or, if our "task" is to "unpack" or "repack" the binary
-                if (task == Tasks.Unpack || task == Tasks.Unpack || task == Tasks.Repack || task == Tasks.RepackDevelopment)
+                if (task == Tasks.Unpack || task == Tasks.Repack)
                 {
                     // Then call the Executor.1 method
                     Execute(bytes, path, Tasks.Decrypt);
@@ -155,7 +155,7 @@ namespace Azurlane
             else if (Compare(bytes, Decrypt))
             {
                 // If = our "task" is to "decrypt" the binary
-                if (task == Tasks.Decrypt || task == Tasks.DecryptDevelopment)
+                if (task == Tasks.Decrypt)
                 {
                     // Then abort, because the binary has already in decrypted state
                     Utils.LogInfo("AssetBundle is already decrypted... <aborted>");
@@ -173,13 +173,13 @@ namespace Azurlane
             }
 
             // If our "task" is to "decrypt" or "encrypt" the binary
-            if (task == Tasks.Decrypt || task == Tasks.DecryptDevelopment || task == Tasks.Encrypt || task == Tasks.EncryptDevelopment)
+            if (task == Tasks.Decrypt || task == Tasks.Encrypt)
             {
                 // Then call the Executor.1 method
                 Execute(bytes, path, task);
             }
             // If our "task" is to "unpack" or "repack" the binary
-            else if (task == Tasks.Unpack || task == Tasks.UnpackDevelopment || task == Tasks.Repack || task == Tasks.RepackDevelopment)
+            else if (task == Tasks.Unpack || task == Tasks.Repack)
             {
                 // Then call the Executor.2 method
                 Execute(path, task);
@@ -197,10 +197,10 @@ namespace Azurlane
         private static void Execute(byte[] bytes, string path, Tasks task)
         {
             // Send a logInfo to terminal indicating that we're decrypting/encrypting the binary
-            Utils.LogInfo("{0} {1}...", task == Tasks.Decrypt || task == Tasks.DecryptDevelopment ? "Decrypting" : "Encrypting", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(path));
 
             var method = Instance.GetType().GetMethod("Make", BindingFlags.Static | BindingFlags.Public);
-            bytes = (byte[])method.Invoke(Instance, new object[] { bytes, task == Tasks.Encrypt || task == Tasks.EncryptDevelopment });
+            bytes = (byte[])method.Invoke(Instance, new object[] { bytes, task == Tasks.Encrypt });
 
             // Write new (decrypted/encrypted) bytes to "path"
             File.WriteAllBytes(path, bytes);
@@ -217,10 +217,10 @@ namespace Azurlane
         private static void Execute(string path, Tasks task)
         {
             // Send a logInfo to terminal indicating that we're unpacking/repacking the binary
-            Utils.LogInfo("{0} {1}...", task == Tasks.Unpack || task == Tasks.UnpackDevelopment ? "Unpacking" : "Repacking", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", task == Tasks.Unpack ? "Unpacking" : "Repacking", Path.GetFileName(path));
 
             // Run a command
-            Utils.Command($"UnityEX.exe {(task == Tasks.Unpack || task == Tasks.UnpackDevelopment ? "export" : "import")} \"{path}\"");
+            Utils.Command($"UnityEX.exe {(task == Tasks.Unpack ? "export" : "import")} \"{path}\"");
 
             // Send a <done> info to terminal indicating that the job is finished
             Utils.WriteLine(" <done>");

@@ -8,26 +8,38 @@ namespace Azurlane
     internal enum Tasks
     {
         Encrypt,
-        EncryptDevelopment,
         Decrypt,
-        DecryptDevelopment,
         Decompile,
-        DecompileDevelopment,
         Recompile,
-        RecompileDevelopment,
         Unpack,
-        UnpackDevelopment,
         Repack,
-        RepackDevelopment
     }
 
     public class Program
     {
+        internal static bool DevelopmentMode;
         internal static bool Ok = false;
 
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
-        private static readonly Dictionary<string, List<string>> Parameters = new Dictionary<string, List<string>>();
-        private static string _currentOption;
+
+        //private static readonly Dictionary<string, List<string>> Parameters = new Dictionary<string, List<string>>();
+        private static readonly Dictionary<Options, List<string>> Parameters = new Dictionary<Options, List<string>>();
+
+        //private static string _currentOption;
+        private static Options _currentOption = Options.None;
+
+        private enum Options
+        {
+            None,
+            LuaUnlock,
+            LuaLock,
+            LuaDecompile,
+            LuaRecompile,
+            AssetBundleDecrypt,
+            AssetBundleEncrypt,
+            AssetBundleUnpack,
+            AssetBundleRepack,
+        }
 
         internal static void Main(string[] args)
         {
@@ -36,6 +48,43 @@ namespace Azurlane
 
             // Initialize options
             var options = new OptionSet()
+            {
+                {"u|unlock", "Decrypt Lua", v => SetOption(Options.LuaUnlock)},
+                {"l|lock", "Encrypt Lua", v => SetOption(Options.LuaLock)},
+                {"d|decompile", "Decompile Lua", v => SetOption(Options.LuaDecompile)},
+                {"r|recompile", "Recompile Lua", v => SetOption(Options.LuaRecompile)},
+                {"decrypt", "Decrypt AssetBundle", v => SetOption(Options.AssetBundleDecrypt)},
+                {"encrypt", "Encrypt AssetBundle", v => SetOption(Options.AssetBundleEncrypt)},
+                {"unpack", "Unpack AssetBundle", v => SetOption(Options.AssetBundleUnpack)},
+                {"repack", "Repack AssetBundle", v => SetOption(Options.AssetBundleRepack)},
+                {"u2|unlock2", "Decrypt Lua", v => SetOption(Options.LuaUnlock, true)},
+                {"l2|lock2", "Encrypt Lua", v => SetOption(Options.LuaLock, true)},
+                {"d2|decompile2", "Decompile Lua", v => SetOption(Options.LuaDecompile, true)},
+                {"r2|recompile2", "Recompile Lua", v => SetOption(Options.LuaRecompile, true)},
+                {"decrypt2", "Decrypt AssetBundle", v => SetOption(Options.AssetBundleDecrypt, true)},
+                {"encrypt2", "Encrypt AssetBundle", v => SetOption(Options.AssetBundleEncrypt, true)},
+                {"unpack2", "Unpack AssetBundle", v => SetOption(Options.AssetBundleUnpack, true)},
+                {"repack2", "Repack AssetBundle", v => SetOption(Options.AssetBundleRepack, true)},
+                {"<>", v => {
+                    if (_currentOption == Options.None) {
+                        showHelp = true;
+                        return;
+                    }
+
+                    if (Parameters.TryGetValue(_currentOption, out var values))
+                    {
+                        values.Add(v);
+                    }
+                    else
+                    {
+                        values = new List<string> { v };
+                        Parameters.Add(_currentOption, values);
+                    }
+                }}
+            };
+
+            // Initialize options
+            /* var options = new OptionSet()
             {
                 {"u|unlock", "Decrypt Lua", v => _currentOption = "lua.unlock"},
                 {"l|lock", "Encrypt Lua", v => _currentOption = "lua.lock"},
@@ -69,7 +118,7 @@ namespace Azurlane
                         Parameters.Add(_currentOption, values);
                     }
                 }}
-            };
+            };*/
 
             // If showHelp return true, then print message and abort
             if (showHelp)
@@ -99,12 +148,12 @@ namespace Azurlane
                     }
                     if (File.Exists(value))
                     {
-                        if (parameter.Key.Contains("lua.")) ListOfLua.Add(Path.GetFullPath(value));
+                        if (OpContains(parameter.Key, "Lua")) ListOfLua.Add(Path.GetFullPath(value));
                         else ListOfAssetBundle.Add(Path.GetFullPath(value));
                     }
                     else if (Directory.Exists(value))
                     {
-                        if (parameter.Key.Contains("lua."))
+                        if (OpContains(parameter.Key, "Lua"))
                         {
                             foreach (var file in Directory.GetFiles(Path.GetFullPath(value), "*.lua*", SearchOption.AllDirectories))
                                 ListOfLua.Add(file);
@@ -121,26 +170,24 @@ namespace Azurlane
             // Begin to initialize ConfigMgr
             ConfigMgr.Initialize();
 
-            if (OpContains("lua."))
+            if (OpContains("Lua"))
             {
                 foreach (var lua in ListOfLua)
-                    LuaMgr.Initialize(lua, OpContains("lua.dev.", "unlock") ? Tasks.DecryptDevelopment : OpContains("lua.", "unlock") ? Tasks.Decrypt : OpContains("lua.dev.", "lock") ? Tasks.EncryptDevelopment : OpContains("lua.", "lock") ? Tasks.Encrypt : OpContains("lua.dev.", "unpack") ? Tasks.UnpackDevelopment : OpContains("lua.", "unpack") ? Tasks.Unpack : OpContains("lua.dev", "repack") ? Tasks.RepackDevelopment : Tasks.Repack);
+                    LuaMgr.Initialize(lua, OpContains(Options.LuaUnlock) ? Tasks.Decrypt : OpContains(Options.LuaLock) ? Tasks.Encrypt : OpContains(Options.LuaRecompile) ? Tasks.Recompile : Tasks.Decompile);
             }
-            else if (OpContains("assetbundle."))
+            else if (OpContains("AssetBundle"))
             {
                 foreach (var assetbundle in ListOfAssetBundle)
-                    AssetBundleMgr.Initialize(assetbundle, OpContains("assetbundle.dev.", "decrypt") ? Tasks.DecryptDevelopment : OpContains("assetbundle.", "decrypt") ? Tasks.Decrypt : OpContains("assetbundle.dev.", "encrypt") ? Tasks.EncryptDevelopment : OpContains("assetbundle.", "encrypt") ? Tasks.Encrypt : OpContains("assetbundle.dev.", "unpack") ? Tasks.UnpackDevelopment : OpContains("assetbundle.", "unpack") ? Tasks.Unpack : OpContains("assetbundle.dev.", "repack") ? Tasks.RepackDevelopment : Tasks.Repack);
+                    AssetBundleMgr.Initialize(assetbundle, OpContains(Options.AssetBundleDecrypt) ? Tasks.Decrypt : OpContains(Options.AssetBundleEncrypt) ? Tasks.Encrypt : OpContains(Options.AssetBundleUnpack) ? Tasks.Unpack : Tasks.Repack);
             }
 
-            if (Ok && !OpContains(".repack") && !OpContains(".decrypt") && !OpContains(".encrypt"))
+            if (Ok && !OpContains(Options.AssetBundleRepack) && !OpContains(Options.AssetBundleDecrypt) && !OpContains(Options.AssetBundleEncrypt))
             {
                 Console.WriteLine();
-                Utils.WriteLine($"{(OpContains(".unlock") || OpContains(".decrypt") ? "Decrypt" : OpContains(".lock") || OpContains(".encrypt") ? "Encrypt" : OpContains(".decompile") ? "Decompile" : OpContains(".recompile") ? "Recompile" : OpContains(".unpack") ? "Unpacking" : "Repacking")} {(OpContains("lua.dev.") ? "" : "assetbundle ")}is done");
+                Utils.WriteLine($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done");
 
-                if (!OpContains("dev.") && !OpContains(".unpack"))
-                {
+                if (!DevelopmentMode && !OpContains(Options.AssetBundleUnpack))
                     Utils.WriteLine("Success: {0} - Failed: {1}", LuaMgr.SuccessCount, LuaMgr.FailedCount);
-                }
             }
         }
 
@@ -156,8 +203,19 @@ namespace Azurlane
             options.WriteOptionDescriptions(Console.Out);
         }
 
-        private static bool OpContains(string key) => OpContains(key);
+        private static bool OpContains(Options option) => _currentOption == option;
+
+        private static bool OpContains(Options option, string key) => option.ToString().Contains(key);
+
+        private static bool OpContains(string key) => _currentOption.ToString().Contains(key);
 
         private static bool OpContains(string key1, string key2) => OpContains(key1) && OpContains(key2);
+
+        private static void SetOption(Options option, bool devMode = false)
+        {
+            _currentOption = option;
+            if (devMode)
+                DevelopmentMode = true;
+        }
     }
 }
