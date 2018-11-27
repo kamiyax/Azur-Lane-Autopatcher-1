@@ -3,25 +3,15 @@ using System.IO;
 
 namespace Azurlane
 {
-    /// <summary>
-    /// ConfigMgr
-    /// Anything related to working with configuration
-    /// </summary>
     public class ConfigMgr
     {
         /// <summary>
-        /// ThirdparyFolder
+        /// Location of third party folder which retrieved from configuration.ini
         /// </summary>
         internal static string ThirdpartyFolder;
 
-        /// <summary>
-        /// Instance
-        /// </summary>
         private static readonly Dictionary<string, string> Instance;
-
-        /// <summary>
-        /// Static constructor
-        /// </summary>
+        
         static ConfigMgr()
         {
             // We make sure whether the instance of ConfigMgr is null
@@ -52,14 +42,12 @@ namespace Azurlane
         }
 
         /// <summary>
-        /// Initialize
-        /// Get value of key "3rdparty_folder" and store it to "ThirdpartyFolder"
+        /// [Initializer] This method is used to retrieve the location of 3rdparty folder
         /// </summary>
         internal static void Initialize() => ThirdpartyFolder = GetString("3rdparty_folder");
 
         /// <summary>
-        /// GetString
-        /// for the sake of convenience
+        /// This method is used to retrieve value of key of dictionary
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
