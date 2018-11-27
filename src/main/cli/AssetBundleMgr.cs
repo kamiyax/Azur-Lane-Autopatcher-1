@@ -5,25 +5,15 @@ using System.Reflection;
 
 namespace Azurlane
 {
-    /// <summary>
-    /// AssetBundleMgr
-    /// Anything related to working with AssetBundle
-    /// </summary>
     public class AssetBundleMgr
     {
-        /// <summary>
-        /// Decryption and encryption patterns
-        /// </summary>
+       /// <summary>
+       /// Decryption and encryption patterns
+       /// </summary>
         private static readonly List<byte[]> Decrypt, Encrypt;
         
-        /// <summary>
-        /// Instance
-        /// </summary>
         private static readonly object Instance;
-
-        /// <summary>
-        /// Static constructor
-        /// </summary>
+        
         static AssetBundleMgr()
         {
             /* Check whether decryption patterns are initialized properly or null
@@ -69,10 +59,10 @@ namespace Azurlane
             var assembly = Assembly.Load(Properties.Resources.Salt);
             Instance = Activator.CreateInstance(assembly.GetType("LL.Salt"));
         }
-        
+
+
         /// <summary>
-        /// Compare.1
-        /// In this method, we're comparing one bytes with another bytes
+        /// [Compare.1] This method is used to compare one bytes with another bytes
         /// </summary>
         /// <param name="b1"></param>
         /// <param name="b2"></param>
@@ -99,10 +89,9 @@ namespace Azurlane
             }
             return true; // result is true
         }
-        
+
         /// <summary>
-        /// Compare.2
-        /// In this method, we're comparing one bytes with multiple bytes stored in list through iteration
+        /// [Compare.2] This method is used to compare one bytes with multiple bytes stored in list through iteration
         /// </summary>
         /// <param name="b1"></param>
         /// <param name="b2"></param>
@@ -132,11 +121,9 @@ namespace Azurlane
             }
             return true;  // result is true
         }
-    
+
         /// <summary>
-        /// Initializer
-        /// In this method, we're checking whether the binary is encrypted, decrypted or invalid/damaged
-        /// before processing the binary
+        /// [Initializer] This method is used to check whether the binary is encrypted, decrypted or invalid/damaged.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="task"></param>
@@ -199,10 +186,9 @@ namespace Azurlane
                 Execute(path, task);
             }
         }
-        
+
         /// <summary>
-        /// Executor.1
-        /// In this method, we're encrypting/decrypting the binary
+        /// [Executor.1] This method is used to encrypt/decrypt the binary
         /// </summary>
         /// <param name="bytes"></param>
         /// <param name="path"></param>
@@ -221,10 +207,9 @@ namespace Azurlane
             // Send a <done> info to terminal indicating that the job is finished
             Utils.WriteLine(" <done>");
         }
-        
+
         /// <summary>
-        /// Executor.2
-        /// In this method, we're unpacking/packing the binary
+        /// [Executor.2] This method is used to unpack/repack the binary
         /// </summary>
         /// <param name="path"></param>
         /// <param name="task"></param>
