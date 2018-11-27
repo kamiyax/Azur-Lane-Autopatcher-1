@@ -1,6 +1,7 @@
 ﻿using NDesk.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace Azurlane
@@ -19,6 +20,7 @@ namespace Azurlane
     {
         internal static bool DevelopmentMode;
         internal static bool Ok = false;
+        private static bool Abort;
 
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
 
@@ -41,9 +43,80 @@ namespace Azurlane
             AssetBundleRepack,
         }
 
+        private static void Initialize()
+        {
+            ConfigMgr.Initialize();
+
+            var missingCount = 0;
+            double pythonVersion;
+
+            // Checking python version
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = "python";
+                process.StartInfo.Arguments = "--version";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+
+                process.Start();
+                var result = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (result.Contains("Python")) pythonVersion = Convert.ToDouble(result.Split(' ')[1].Remove(3));
+                else pythonVersion = -0.0;
+            }
+
+            if (pythonVersion.Equals(0.0) || pythonVersion.Equals(-0.0))
+            {
+                Utils.LogDebug("No python detected", true);
+                Utils.LogInfo("Install the latest version of Python to solve this issue", true);
+                missingCount++;
+            }
+            else if (pythonVersion < 3.7)
+            {
+                Utils.LogDebug("Detected Python version {0}.x - expected 3.7.x or newer", true, pythonVersion);
+                Utils.LogInfo("Install the latest version of Python to solve this issue", true);
+                missingCount++;
+            }
+
+            if (!Directory.Exists(PathMgr.Thirdparty("ljd")))
+            {
+                Utils.LogDebug("Not found: LuaJIT Raw-Bytecode Decompiler (ljd)", true);
+                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                missingCount++;
+            }
+
+            if (!Directory.Exists(PathMgr.Thirdparty("luajit")))
+            {
+                Utils.LogDebug("Not found: LuaJIT Just-In-Time Compiler", true);
+                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                missingCount++;
+            }
+
+            if (!Directory.Exists(PathMgr.Thirdparty("unityex")))
+            {
+                Utils.LogDebug("Not found: UnityEx.exe", true);
+                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                missingCount++;
+            }
+
+            if (missingCount > 0)
+            {
+                Abort = true;
+                Console.WriteLine();
+                Utils.Write("Aborted.", true);
+            }
+        }
+
         internal static void Main(string[] args)
         {
-            // Check whether arguments are valid by counting the length, if < 2 = show help message
+            // Dependency checker
+            Initialize();
+            
+            if (Abort) return;
+
+            // Check whether arguments are valid by counting the length
             var showHelp = args.Length < 2;
 
             // Initialize options
@@ -166,9 +239,6 @@ namespace Azurlane
                     }
                 }
             }
-
-            // Begin to initialize ConfigMgr
-            ConfigMgr.Initialize();
 
             if (OpContains("Lua"))
             {
