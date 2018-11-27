@@ -83,21 +83,21 @@ namespace Azurlane
             if (!Directory.Exists(PathMgr.Thirdparty("ljd")))
             {
                 Utils.LogDebug("Not found: LuaJIT Raw-Bytecode Decompiler (ljd)", true);
-                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
                 missingCount++;
             }
 
             if (!Directory.Exists(PathMgr.Thirdparty("luajit")))
             {
                 Utils.LogDebug("Not found: LuaJIT Just-In-Time Compiler", true);
-                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
                 missingCount++;
             }
 
             if (!Directory.Exists(PathMgr.Thirdparty("unityex")))
             {
                 Utils.LogDebug("Not found: UnityEx.exe", true);
-                Utils.LogInfo("Check one of k0np4ku's repository to solve this issue", true);
+                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
                 missingCount++;
             }
 
