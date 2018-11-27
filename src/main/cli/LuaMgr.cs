@@ -40,7 +40,7 @@ namespace Azurlane
                 if (task == Tasks.Encrypt)
                 {
                     // Then abort, because the binary has already in encrypted state
-                    Utils.LogInfo("{0} is already encrypted... <aborted>", Path.GetFileName(lua));
+                    Utils.LogInfo("{0} is already encrypted... <aborted>", true, Path.GetFileName(lua));
                     return;
                 }
                 // Or, if our "task" is to "decompile" the binary
@@ -62,7 +62,7 @@ namespace Azurlane
                 if (task == Tasks.Decrypt)
                 {
                     // Then abort, because the binary has already in decrypted state
-                    Utils.LogInfo("{0} is already decrypted... <aborted>", Path.GetFileName(lua));
+                    Utils.LogInfo("{0} is already decrypted... <aborted>", true, Path.GetFileName(lua));
                     return;
                 }
                 // Then continue if not aborted
@@ -72,7 +72,7 @@ namespace Azurlane
             else if (task != Tasks.Recompile)
             {
                 // Abort
-                Utils.LogInfo("Not a valid or damaged lua file... <aborted>");
+                Utils.LogInfo("Not a valid or damaged lua file... <aborted>", true);
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace Azurlane
             try
             {
                 // Send a logInfo to terminal indicating that we're decrypting/encrypting the binary
-                Utils.LogInfo("{0} {1}...", task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(lua));
+                Utils.LogInfo("{0} {1}...", false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(lua));
                 using (var stream = new MemoryStream(bytes))
                 {
                     using (var reader = new BinaryReader(stream))
@@ -180,12 +180,12 @@ namespace Azurlane
                 if (File.Exists(lua))
                 {
                     SuccessCount++;
-                    Utils.WriteLine(" <done>");
+                    Utils.Write(" <done>", true);
                 }
                 else
                 {
                     FailedCount++;
-                    Utils.WriteLine(" <failed>");
+                    Utils.Write(" <failed>", true);
                 }
             }
         }
@@ -204,7 +204,7 @@ namespace Azurlane
                 lua = Path.Combine(PathMgr.Local(task == Tasks.Decompile ? "decompiled_lua" : "recompiled_lua"), Path.GetFileName(lua));
             }
 
-            Utils.LogInfo("{0} {1}...", task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua));
+            Utils.LogInfo("{0} {1}...", true, task == Tasks.Decompile ? "Decompiling" : "Recompiling", Path.GetFileName(lua));
             try
             {
                 Utils.Command(task == Tasks.Decompile ? $"python main.py -f \"{lua}\" -o \"{lua}\"" : $"luajit.exe -b \"{lua}\" \"{lua}\"");
@@ -218,12 +218,12 @@ namespace Azurlane
                 if (File.Exists(lua))
                 {
                     SuccessCount++;
-                    Utils.WriteLine(" <done>");
+                    Utils.Write(" <done>", true);
                 }
                 else
                 {
                     FailedCount++;
-                    Utils.WriteLine(" <failed>");
+                    Utils.Write(" <failed>", true);
                 }
             }
         }
