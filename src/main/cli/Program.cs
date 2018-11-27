@@ -49,10 +49,10 @@ namespace Azurlane
                 {"l2|lock2", "Encrypt Lua (Development)", v => _currentOption = "lua.dev.lock"},
                 {"d2|decompile2", "Decompile Lua (Development)", v => _currentOption = "lua.dev.decompile"},
                 {"r2|recompile2", "Recompile Lua (Development)", v => _currentOption = "lua.dev.recompile"},
-                {"decrypt2", "Decrypt AssetBundle (Development)",  v => _currentOption = "assetbundledev.decrypt"},
-                {"encrypt2", "Encrypt AssetBundle (Development)", v => _currentOption = "assetbundledev.encrypt"},
-                {"unpack2", "Unpack all lua from AssetBundle (Development)", v => _currentOption = "assetbundledev.unpack"},
-                {"repack2", "Repack all lua from AssetBundle (Development)", v => _currentOption = "assetbundledev.repack"},
+                {"decrypt2", "Decrypt AssetBundle (Development)",  v => _currentOption = "assetbundle.dev.decrypt"},
+                {"encrypt2", "Encrypt AssetBundle (Development)", v => _currentOption = "assetbundle.dev.encrypt"},
+                {"unpack2", "Unpack all lua from AssetBundle (Development)", v => _currentOption = "assetbundle.dev.unpack"},
+                {"repack2", "Repack all lua from AssetBundle (Development)", v => _currentOption = "assetbundle.dev.repack"},
                 {"<>", v => {
                     if (_currentOption == null) {
                         showHelp = true;
@@ -129,7 +129,7 @@ namespace Azurlane
             else if (OpContains("assetbundle."))
             {
                 foreach (var assetbundle in ListOfAssetBundle)
-                    AssetBundleMgr.Initialize(assetbundle, OpContains("assetbundledev.", "decrypt") ? Tasks.DecryptDevelopment : OpContains("assetbundle.", "decrypt") ? Tasks.Decrypt : OpContains("assetbundledev.", "encrypt") ? Tasks.EncryptDevelopment : OpContains("assetbundle.", "encrypt") ? Tasks.Encrypt : OpContains("assetbundledev.", "unpack") ? Tasks.UnpackDevelopment : OpContains("assetbundle.", "unpack") ? Tasks.Unpack : OpContains("assetbundle.dev.", "repack") ? Tasks.RepackDevelopment : Tasks.Repack);
+                    AssetBundleMgr.Initialize(assetbundle, OpContains("assetbundle.dev.", "decrypt") ? Tasks.DecryptDevelopment : OpContains("assetbundle.", "decrypt") ? Tasks.Decrypt : OpContains("assetbundle.dev.", "encrypt") ? Tasks.EncryptDevelopment : OpContains("assetbundle.", "encrypt") ? Tasks.Encrypt : OpContains("assetbundle.dev.", "unpack") ? Tasks.UnpackDevelopment : OpContains("assetbundle.", "unpack") ? Tasks.Unpack : OpContains("assetbundle.dev.", "repack") ? Tasks.RepackDevelopment : Tasks.Repack);
             }
 
             if (Ok && !OpContains(".repack") && !OpContains(".decrypt") && !OpContains(".encrypt"))
@@ -144,11 +144,6 @@ namespace Azurlane
             }
         }
 
-        private static bool OpContains(string key) => OpContains(key);
-
-        private static bool OpContains(string key1, string key2) =>
-            OpContains(key1) && OpContains(key2);
-
         /// <summary>
         /// Print help message to the terminal
         /// </summary>
@@ -160,5 +155,9 @@ namespace Azurlane
             Utils.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
         }
+
+        private static bool OpContains(string key) => OpContains(key);
+
+        private static bool OpContains(string key1, string key2) => OpContains(key1) && OpContains(key2);
     }
 }
