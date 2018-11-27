@@ -17,10 +17,15 @@ namespace Azurlane
 
     public class Program
     {
+
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
         private static readonly Dictionary<string, List<string>> Parameters = new Dictionary<string, List<string>>();
         private static string _currentOption;
 
+        /// <summary>
+        /// Print help message to the terminal
+        /// </summary>
+        /// <param name="options"></param>
         private static void HelpMessage(OptionSet options)
         {
             Utils.WriteLine("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>");
@@ -31,16 +36,19 @@ namespace Azurlane
 
         internal static void Main(string[] args)
         {
+            // Check whether arguments are valid by counting the length, if < 2 = show help message
             var showHelp = args.Length < 2;
+
+            // Initialize options
             var options = new OptionSet()
             {
                 {"u|unlock", "Decrypt Lua", v => _currentOption = "lua.unlock"},
                 {"l|lock", "Encrypt Lua", v => _currentOption = "lua.lock"},
-                {"d|decompile", "Decompile Lua (will automatically decrypt if Lua is encrypted)", v => _currentOption = "lua.decompile"},
+                {"d|decompile", "Decompile Lua", v => _currentOption = "lua.decompile"},
                 {"r|recompile", "Recompile Lua", v => _currentOption = "lua.recompile"},
                 {"decrypt", "Decrypt AssetBundle",  v => _currentOption = "assetbundle.decrypt"},
                 {"encrypt", "Encrypt AssetBundle", v => _currentOption = "assetbundle.encrypt"},
-                {"unpack", "Unpack all lua from AssetBundle (will automatically decrypt if AssetBundle is encrypted)", v => _currentOption = "assetbundle.unpack"},
+                {"unpack", "Unpack all lua from AssetBundle", v => _currentOption = "assetbundle.unpack"},
                 {"repack", "Repack all lua from AssetBundle", v => _currentOption = "assetbundle.repack"},
                 {"<>", v => {
                     if (_currentOption == null) {
@@ -60,21 +68,25 @@ namespace Azurlane
                 }}
             };
 
+            // If showHelp return true, then print message and abort
             if (showHelp)
             {
-                HelpMessage(options);
-                return;
+                HelpMessage(options); // print message
+                return; // abort
             }
 
             try
             {
-                options.Parse(args);
+                options.Parse(args); // Trying to parse options
             }
             catch (OptionException e)
             {
+                // Catch unexpected exception
                 Utils.LogException("Exception detected during parsing options", e);
             }
 
+
+            // Iterate through parameter in parameters (dictionary)
             foreach (var parameter in Parameters)
             {
                 foreach (var value in parameter.Value)
@@ -85,8 +97,14 @@ namespace Azurlane
                     }
                     if (File.Exists(value))
                     {
-                        if (parameter.Key.Contains("lua.")) ListOfLua.Add(Path.GetFullPath(value));
-                        else ListOfAssetBundle.Add(Path.GetFullPath(value));
+                        if (parameter.Key.Contains("lua."))
+                        {
+                            ListOfLua.Add(Path.GetFullPath(value));
+                        }
+                        else
+                        {
+                            ListOfAssetBundle.Add(Path.GetFullPath(value));
+                        }
                     }
                     else if (Directory.Exists(value))
                     {
@@ -104,6 +122,7 @@ namespace Azurlane
                 }
             }
 
+            // Begin initialize ConfigMgr
             ConfigMgr.Initialize();
         }
     }
