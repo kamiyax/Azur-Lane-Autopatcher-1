@@ -28,13 +28,14 @@ namespace Azurlane
         /// Send a debug message to the terminal
         /// </summary>
         /// <param name="message"></param>
+        /// /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogDebug(string message, params object[] arg) => WriteLine($@"[{DateTime.Now:HH:mm:ss}][Debug]> {message}", arg);
+        internal static void LogDebug(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm:ss}][Debug]> {message}", writeLine, arg);
 
         internal static void LogException(string message, Exception exception)
         {
             // Send a debug message to terminal
-            LogDebug(message);
+            LogDebug(message, true);
 
             // Checking whether Logs.txt is exists in local folder
             if (!File.Exists(PathMgr.Local("Logs.txt")))
@@ -57,18 +58,21 @@ namespace Azurlane
         /// Send an info message to the terminal
         /// </summary>
         /// <param name="message"></param>
+        /// /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogInfo(string message, params object[] arg) => WriteLine($@"[{DateTime.Now:HH:mm:ss}][Info]> {message}", arg);
+        internal static void LogInfo(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm:ss}][Info]> {message}", writeLine, arg);
 
         /// <summary>
         /// A better version of Console.WriteLine
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void WriteLine(string message, params object[] arg)
+        internal static void Write(string message, bool writeLine, params object[] arg)
         {
             Console.Write(message, arg);
-            Console.WriteLine();
+            if (writeLine)
+                Console.WriteLine();
         }
     }
 }

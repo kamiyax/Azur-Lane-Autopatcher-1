@@ -139,7 +139,7 @@ namespace Azurlane
                 if (task == Tasks.Encrypt)
                 {
                     // Then abort, because the binary has already in encrypted state
-                    Utils.LogInfo("AssetBundle is already encrypted... <aborted>");
+                    Utils.LogInfo("AssetBundle is already encrypted... <aborted>", true);
                     return;
                 }
                 // Or, if our "task" is to "unpack" or "repack" the binary
@@ -158,7 +158,7 @@ namespace Azurlane
                 if (task == Tasks.Decrypt)
                 {
                     // Then abort, because the binary has already in decrypted state
-                    Utils.LogInfo("AssetBundle is already decrypted... <aborted>");
+                    Utils.LogInfo("AssetBundle is already decrypted... <aborted>", true);
                     return;
                 }
                 // Then continue if not aborted
@@ -168,7 +168,7 @@ namespace Azurlane
             else
             {
                 // Abort
-                Utils.LogInfo("Not a valid/damaged AssetBundle... <aborted>");
+                Utils.LogInfo("Not a valid/damaged AssetBundle... <aborted>", true);
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace Azurlane
         private static void Execute(byte[] bytes, string path, Tasks task)
         {
             // Send a logInfo to terminal indicating that we're decrypting/encrypting the binary
-            Utils.LogInfo("{0} {1}...", task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(path));
 
             var method = Instance.GetType().GetMethod("Make", BindingFlags.Static | BindingFlags.Public);
             bytes = (byte[])method.Invoke(Instance, new object[] { bytes, task == Tasks.Encrypt });
@@ -206,7 +206,7 @@ namespace Azurlane
             File.WriteAllBytes(path, bytes);
 
             // Send a <done> info to terminal indicating that the job is finished
-            Utils.WriteLine(" <done>");
+            Utils.Write(" <done>", true);
         }
 
         /// <summary>
@@ -217,13 +217,13 @@ namespace Azurlane
         private static void Execute(string path, Tasks task)
         {
             // Send a logInfo to terminal indicating that we're unpacking/repacking the binary
-            Utils.LogInfo("{0} {1}...", task == Tasks.Unpack ? "Unpacking" : "Repacking", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", false, task == Tasks.Unpack ? "Unpacking" : "Repacking", Path.GetFileName(path));
 
             // Run a command
             Utils.Command($"UnityEX.exe {(task == Tasks.Unpack ? "export" : "import")} \"{path}\"");
 
             // Send a <done> info to terminal indicating that the job is finished
-            Utils.WriteLine(" <done>");
+            Utils.Write(" <done>", true);
         }
     }
 }
