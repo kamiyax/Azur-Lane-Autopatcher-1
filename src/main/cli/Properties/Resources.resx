@@ -117,18 +117,39 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="cliStatus" xml:space="preserve">
+  <data name="Author" xml:space="preserve">
+    <value>github.com/k0np4ku</value>
+  </data>
+  <data name="CliStatus" xml:space="preserve">
     <value>https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/status.txt</value>
   </data>
-  <data name="cliVersion" xml:space="preserve">
+  <data name="CliVersion" xml:space="preserve">
     <value>https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/version.txt</value>
+  </data>
+  <data name="LjdNotFoundMessage" xml:space="preserve">
+    <value>Not found: LuaJIT Raw-Bytecode Decompiler (ljd)</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Lock" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Lock;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="LuajitNotFoundMessage" xml:space="preserve">
+    <value>Not found: LuaJIT Just-In-Time Compiler</value>
+  </data>
+  <data name="Repository" xml:space="preserve">
+    <value>github.com/k0np4ku/Azur-Lane-Autopatcher</value>
+  </data>
   <data name="Salt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Salt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SolutionPythonMessage" xml:space="preserve">
+    <value>Install the latest version of Python to solve this issue</value>
+  </data>
+  <data name="SolutionReferMessage" xml:space="preserve">
+    <value>Refer to one of k0np4ku's repository to solve this issue</value>
+  </data>
+  <data name="UnityExNotFoundMessage" xml:space="preserve">
+    <value>Not found: UnityEx.exe</value>
   </data>
   <data name="Unlock" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Unlock;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

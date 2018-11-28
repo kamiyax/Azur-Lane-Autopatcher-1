@@ -61,20 +61,38 @@ namespace Azurlane.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to aircraft_template.lua.txt.
+        /// </summary>
+        internal static string Aircraft {
+            get {
+                return ResourceManager.GetString("Aircraft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to github.com/k0np4ku.
+        /// </summary>
+        internal static string Author {
+            get {
+                return ResourceManager.GetString("Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/autopatcher/status.txt.
         /// </summary>
-        internal static string autopatcherStatus {
+        internal static string AutopatcherStatus {
             get {
-                return ResourceManager.GetString("autopatcherStatus", resourceCulture);
+                return ResourceManager.GetString("AutopatcherStatus", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/autopatcher/version.txt.
         /// </summary>
-        internal static string autopatcherVersion {
+        internal static string AutopatcherVersion {
             get {
-                return ResourceManager.GetString("autopatcherVersion", resourceCulture);
+                return ResourceManager.GetString("AutopatcherVersion", resourceCulture);
             }
         }
         
@@ -86,6 +104,96 @@ namespace Azurlane.Properties {
         internal static string Configuration {
             get {
                 return ResourceManager.GetString("Configuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to enemy_data_statistics.lua.txt.
+        /// </summary>
+        internal static string Enemy {
+            get {
+                return ResourceManager.GetString("Enemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to enemy_data_skill.lua.txt.
+        /// </summary>
+        internal static string EnemySkill {
+            get {
+                return ResourceManager.GetString("EnemySkill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found: LuaJIT Raw-Bytecode Decompiler (ljd).
+        /// </summary>
+        internal static string LjdNotFoundMessage {
+            get {
+                return ResourceManager.GetString("LjdNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found: LuaJIT Just-In-Time Compiler.
+        /// </summary>
+        internal static string LuajitNotFoundMessage {
+            get {
+                return ResourceManager.GetString("LuajitNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to github.com/k0np4ku/Azur-Lane-Autopatcher.
+        /// </summary>
+        internal static string Repository {
+            get {
+                return ResourceManager.GetString("Repository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ship_data_statistics.lua.txt.
+        /// </summary>
+        internal static string Ship {
+            get {
+                return ResourceManager.GetString("Ship", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install the latest version of Python to solve this issue.
+        /// </summary>
+        internal static string SolutionPythonMessage {
+            get {
+                return ResourceManager.GetString("SolutionPythonMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refer to one of k0np4ku&apos;s repository to solve this issue.
+        /// </summary>
+        internal static string SolutionReferMessage {
+            get {
+                return ResourceManager.GetString("SolutionReferMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found: UnityEx.exe.
+        /// </summary>
+        internal static string UnityExNotFoundMessage {
+            get {
+                return ResourceManager.GetString("UnityExNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to weapon_property.lua.txt.
+        /// </summary>
+        internal static string Weapon {
+            get {
+                return ResourceManager.GetString("Weapon", resourceCulture);
             }
         }
     }

@@ -46,18 +46,18 @@ namespace Azurlane
                     foreach (Mods modName in Enum.GetValues(typeof(Mods)))
                     {
                         if (key.Compare(modName))
-                            Program.SetValue(modName, (bool) value.GetValue());
+                            Program.SetValue(modName, (bool)value.GetValue());
                     }
                 }
             }
         }
-
-        private static object GetValue(this object o) => ((string) o).ToLower() == "true" ? true : ((string)o).ToLower() == "ignore" || ((string)o).ToLower() == "false" ? false : o;
 
         private static void Add(Key key, object obj) => Instance.Add(key, obj);
 
         private static bool Compare(this string s, Mods mod) => s == mod.ToString().Replace("_", "+");
 
         private static bool Compare(this string s, Key mod) => s == mod.ToString();
+
+        private static object GetValue(this object o) => ((string)o).ToLower() == "true" ? true : ((string)o).ToLower() == "ignore" || ((string)o).ToLower() == "false" ? false : o;
     }
 }

@@ -7,7 +7,7 @@
     <ProjectGuid>{43E392D2-67F5-4F86-B4F6-43BEBF869E74}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Azurlane</RootNamespace>
-    <AssemblyName>Autopatcher</AssemblyName>
+    <AssemblyName>Azurlane</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetBundleMgr.cs" />
     <Compile Include="ConfigMgr.cs" />
+    <Compile Include="LuaMgr.cs" />
     <Compile Include="PathMgr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

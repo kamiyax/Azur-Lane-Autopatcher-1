@@ -28,14 +28,15 @@ namespace Azurlane
         /// Send a debug message to the terminal
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="space"></param>
         /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogDebug(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][DEBUG]> {message}", writeLine, arg);
+        internal static void LogDebug(string message, bool space, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][DEBUG]> {message}", space, writeLine, arg);
 
         internal static void LogException(string message, Exception exception)
         {
             // Send a debug message to terminal
-            LogDebug(message, true);
+            LogDebug(message, true, true);
 
             // Checking whether Logs.txt is in local folder
             if (!File.Exists(PathMgr.Local("Logs.txt")))
@@ -57,26 +58,31 @@ namespace Azurlane
                     streamWriter.WriteLine();
                 }
             }
-            catch (Exception e) { }
+            catch (Exception)
+            {
+                // Empty
+            }
         }
 
         /// <summary>
         /// Send an info message to the terminal
         /// </summary>
         /// <param name="message"></param>
-        /// /// <param name="writeLine"></param>
+        /// <param name="space"></param>
+        /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void LogInfo(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][INFO]> {message}", writeLine, arg);
+        internal static void LogInfo(string message, bool space, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][INFO]> {message}", space, writeLine, arg);
 
         /// <summary>
         /// A better version of Console.WriteLine
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="space"></param>
         /// <param name="writeLine"></param>
         /// <param name="arg"></param>
-        internal static void Write(string message, bool writeLine, params object[] arg)
+        internal static void Write(string message, bool space, bool writeLine, params object[] arg)
         {
-            Console.Write(message, arg);
+            Console.Write((space ? @"  " : null) + message, arg);
             if (writeLine)
                 Console.WriteLine();
         }

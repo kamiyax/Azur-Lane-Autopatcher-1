@@ -1,45 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Azurlane
 {
-    public class ConfigMgr
+    internal static class ConfigMgr
     {
-        internal static string ThirdpartyFolder;
-        internal static string Version = "2018.11.28.01";
-        private static readonly Dictionary<string, string> Instance;
+        internal static readonly Dictionary<Key, object> Instance;
 
         static ConfigMgr()
         {
-            // Check whether the instance is null
             if (Instance == null)
+                Instance = new Dictionary<Key, object>();
+        }
+
+        internal enum Key
+        {
+            Version,
+            Thirdparty_Folder
+        }
+
+        internal static object GetValue(Key key) => Instance[key];
+
+        internal static void Initialize()
+        {
+            var iniPath = PathMgr.Local("Configuration.ini");
+
+            foreach (var line in File.ReadAllLines(iniPath))
             {
-                // Store location of configuration.ini into variable
-                var iniPath = PathMgr.Local("Configuration.ini");
-
-                // Initialize
-                Instance = new Dictionary<string, string>();
-
-                // Iterate through each line of configuration.ini
-                foreach (var line in File.ReadAllLines(iniPath))
+                if (line.Contains("="))
                 {
-                    // Check whether line contains '=' character
-                    if (line.Contains("="))
-                    {
-                        // Split the line
-                        var s = line.Split('=');
+                    var s = line.Split('=');
+                    var key = s[0];
+                    object value = s[1];
 
-                        // Check whether key is "3rdparty_folder"
-                        if (s[0] == "3rdparty_folder")
-                            // Add key and value to dictionary
-                            Instance.Add(s[0], s[1]);
+                    foreach (Key keyName in Enum.GetValues(typeof(Key)))
+                    {
+                        if (key.Compare(keyName))
+                            Add(keyName, value.GetValue());
                     }
                 }
             }
         }
 
-        internal static void Initialize() => ThirdpartyFolder = GetString("3rdparty_folder");
+        private static void Add(Key key, object obj) => Instance.Add(key, obj);
 
-        private static string GetString(string key) => Instance[key];
+        private static bool Compare(this string s, Key key) => s == key.ToString();
+
+        private static object GetValue(this object o) => ((string)o).ToLower() == "true" ? true : ((string)o).ToLower() == "ignore" || ((string)o).ToLower() == "false" ? false : o;
     }
 }

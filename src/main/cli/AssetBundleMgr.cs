@@ -53,6 +53,7 @@ namespace Azurlane
             Instance = Activator.CreateInstance(assembly.GetType("LL.Salt"));
         }
 
+        /*
         /// <summary>
         /// [Compare.1] Compare bytes
         /// </summary>
@@ -74,7 +75,7 @@ namespace Azurlane
                 Utils.LogException("Exception detected during Compare.1", e);
             }
             return true;
-        }
+        }*/
 
         /// <summary>
         /// [Compare.2] Compare bytes
@@ -111,7 +112,7 @@ namespace Azurlane
         {
             // Read all bytes of a binary and store them into memory
             var bytes = File.ReadAllBytes(path);
-        
+
             // Compare bytes of the binary with encryption patterns
             if (Compare(bytes, EncryptionPatterns))
             {
@@ -119,7 +120,7 @@ namespace Azurlane
                 if (task == Tasks.Encrypt)
                 {
                     // Abort because the binary is already encrypted
-                    Utils.LogInfo("AssetBundle is already encrypted... <aborted>", true);
+                    Utils.LogInfo("AssetBundle is already encrypted... <aborted>", true, true);
                     return;
                 }
                 // Check whether our task is to unpack or repack the binary
@@ -136,17 +137,17 @@ namespace Azurlane
                 if (task == Tasks.Decrypt)
                 {
                     // Abort because the binary is already decrypted
-                    Utils.LogInfo("AssetBundle is already decrypted... <aborted>", true);
+                    Utils.LogInfo("AssetBundle is already decrypted... <aborted>", true, true);
                     return;
                 }
             }
             else
             {
                 // Abort because the binary is valid or damaged
-                Utils.LogInfo("Not a valid/damaged AssetBundle... <aborted>", true);
+                Utils.LogInfo("Not a valid/damaged AssetBundle... <aborted>", true, true);
                 return;
             }
-            
+
             // Check whether our task is to decrypt or encrypt the binary
             if (task == Tasks.Decrypt || task == Tasks.Encrypt)
             {
@@ -172,16 +173,16 @@ namespace Azurlane
         private static void Execute(byte[] bytes, string path, Tasks task)
         {
             // Send a logInfo to the terminal
-            Utils.LogInfo("{0} {1}...", false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", true, false, task == Tasks.Decrypt ? "Decrypting" : "Encrypting", Path.GetFileName(path));
 
             var method = Instance.GetType().GetMethod("Make", BindingFlags.Static | BindingFlags.Public);
             bytes = (byte[])method.Invoke(Instance, new object[] { bytes, task == Tasks.Encrypt });
-            
+
             // Write the decrypted/encrypted bytes to the designated location
             File.WriteAllBytes(path, bytes);
-            
+
             // Send a done message
-            Utils.Write(" <done>", true);
+            Utils.Write(" <done>", false, true);
         }
 
         /// <summary>
@@ -192,13 +193,13 @@ namespace Azurlane
         private static void Execute(string path, Tasks task)
         {
             // Send a logInfo to the terminal
-            Utils.LogInfo("{0} {1}...", false, task == Tasks.Unpack ? "Unpacking" : "Repacking", Path.GetFileName(path));
+            Utils.LogInfo("{0} {1}...", true, false, task == Tasks.Unpack ? "Unpacking" : "Repacking", Path.GetFileName(path));
 
             // Run a new command
             Utils.Command($"UnityEX.exe {(task == Tasks.Unpack ? "export" : "import")} \"{path}\"", PathMgr.Thirdparty("unityex"));
 
             // Send a done message
-            Utils.Write(" <done>", true);
+            Utils.Write(" <done>", false, true);
         }
     }
 }

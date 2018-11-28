@@ -7,7 +7,7 @@
     <ProjectGuid>{5C9E732B-9C5C-4612-936C-61C8CB9937D7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Azurlane</RootNamespace>
-    <AssemblyName>cli</AssemblyName>
+    <AssemblyName>Azcli</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

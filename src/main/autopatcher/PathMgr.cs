@@ -11,7 +11,7 @@ namespace Azurlane
             var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
             // Check whether argument "path" is not null and whether file and directory is exists
-            if (path != null && !File.Exists(path) && !Directory.Exists(path))
+            if (path != null && !File.Exists(path) && !Directory.Exists(path) && !path.Contains("."))
                 // If meet the condition, then create a directory
                 Directory.CreateDirectory(path);
 

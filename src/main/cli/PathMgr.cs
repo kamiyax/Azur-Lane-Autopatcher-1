@@ -15,6 +15,6 @@ namespace Azurlane
             return path == null ? root : Path.Combine(root, path);
         }
 
-        internal static string Thirdparty(string path = null) => path != null ? Path.Combine(Local(ConfigMgr.ThirdpartyFolder), path) : Local(ConfigMgr.ThirdpartyFolder);
+        internal static string Thirdparty(string path = null) => path != null ? Path.Combine(Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Thirdparty_Folder)), path) : Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Thirdparty_Folder));
     }
 }

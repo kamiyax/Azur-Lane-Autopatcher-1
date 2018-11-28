@@ -40,48 +40,8 @@ namespace Azurlane
             AssetBundleRepack,
         }
 
-        private static void CheckVersion()
+        private static void CheckDependencies()
         {
-            try
-            {
-                using (var wc = new System.Net.WebClient())
-                {
-                    var latestStatus = wc.DownloadString(Properties.Resources.cliStatus);
-                    if (latestStatus != "ok")
-                    {
-                        _abort = true;
-                        return;
-                    }
-
-                    var latestVersion = wc.DownloadString(Properties.Resources.cliVersion);
-                    if (ConfigMgr.Version != latestVersion)
-                    {
-                        Utils.Write("[Obsolete CLI version]", true);
-                        Utils.Write("Download the latest version from:", true);
-                        Utils.Write("github.com/k0np4ku/Azur-Lane-Autopatcher", true);
-                        _abort = true;
-                    }
-                }
-            }
-            catch
-            {
-                _abort = true;
-            }
-        }
-
-        private static void Help(OptionSet options)
-        {
-            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
-            Console.WriteLine();
-            Utils.Write("Options:", true);
-            options.WriteOptionDescriptions(Console.Out);
-        }
-
-        private static void Initialize()
-        {
-            CheckVersion();
-            ConfigMgr.Initialize();
-
             var missingCount = 0;
             var pythonVersion = 0.0;
 
@@ -111,40 +71,96 @@ namespace Azurlane
 
             if (pythonVersion.Equals(0.0) || pythonVersion.Equals(-0.0))
             {
-                Utils.LogDebug("No python detected", true);
-                Utils.LogInfo("Install the latest version of Python to solve this issue", true);
+                Utils.LogDebug("No python detected", true, true);
+                Utils.LogInfo(Properties.Resources.SolutionPythonMessage, true, true);
                 missingCount++;
             }
             else if (pythonVersion < 3.7)
             {
-                Utils.LogDebug("Detected Python version {0}.x - expected 3.7.x or newer", true, pythonVersion);
-                Utils.LogInfo("Install the latest version of Python to solve this issue", true);
+                Utils.LogDebug("Detected Python version {0}.x - expected 3.7.x or newer", true, true, pythonVersion);
+                Utils.LogInfo(Properties.Resources.SolutionPythonMessage, true, true);
                 missingCount++;
             }
 
             if (!Directory.Exists(PathMgr.Thirdparty("ljd")))
             {
-                Utils.LogDebug("Not found: LuaJIT Raw-Bytecode Decompiler (ljd)", true);
-                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
+                Utils.LogDebug(Properties.Resources.LuajitNotFoundMessage, true, true);
+                Utils.LogInfo(Properties.Resources.SolutionReferMessage, true, true);
                 missingCount++;
             }
 
             if (!Directory.Exists(PathMgr.Thirdparty("luajit")))
             {
-                Utils.LogDebug("Not found: LuaJIT Just-In-Time Compiler", true);
-                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
+                Utils.LogDebug(Properties.Resources.LjdNotFoundMessage, true, true);
+                Utils.LogInfo(Properties.Resources.SolutionReferMessage, true, true);
                 missingCount++;
             }
 
             if (!Directory.Exists(PathMgr.Thirdparty("unityex")))
             {
-                Utils.LogDebug("Not found: UnityEx.exe", true);
-                Utils.LogInfo("Refer to one of k0np4ku's repository to solve this issue", true);
+                Utils.LogDebug(Properties.Resources.UnityExNotFoundMessage, true, true);
+                Utils.LogInfo(Properties.Resources.SolutionReferMessage, true, true);
                 missingCount++;
             }
 
             if (missingCount > 0)
                 _abort = true;
+        }
+
+        private static void CheckVersion()
+        {
+            try
+            {
+                using (var wc = new System.Net.WebClient())
+                {
+                    if (!DevelopmentMode)
+                    {
+                        var latestStatus = wc.DownloadString(Properties.Resources.CliStatus);
+                        if (latestStatus != "ok")
+                        {
+                            _abort = true;
+                            return;
+                        }
+                    }
+
+                    var latestVersion = wc.DownloadString(Properties.Resources.CliVersion);
+                    if ((string)ConfigMgr.GetValue(ConfigMgr.Key.Version) != latestVersion)
+                    {
+                        Utils.Write("[Obsolete CLI version]", true, true);
+                        Utils.Write("Download the latest version from:", true, true);
+                        Utils.Write(Properties.Resources.Repository, true, true);
+                        _abort = true;
+                    }
+                }
+            }
+            catch
+            {
+                _abort = true;
+            }
+        }
+
+        private static void Message()
+        {
+            Utils.Write("", true, true);
+            Utils.Write("Azurlane Autopatcher", true, true);
+            Utils.Write("Version {0}", true, true, ConfigMgr.GetValue(ConfigMgr.Key.Version));
+            Utils.Write("{0}", true, true, Properties.Resources.Author);
+            Utils.Write("", true, true);
+        }
+
+        private static void Help(OptionSet options)
+        {
+            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true, true);
+            Console.WriteLine();
+            Utils.Write("Options:", true, true);
+            options.WriteOptionDescriptions(Console.Out);
+        }
+
+        private static void Initialize()
+        {
+            ConfigMgr.Initialize();
+            Message();
+            CheckDependencies();
         }
 
         private static void Main(string[] args)
@@ -205,13 +221,15 @@ namespace Azurlane
                 Utils.LogException("Exception detected during parsing options", e);
             }
 
+            CheckVersion();
+
             foreach (var parameter in Parameters)
             {
                 foreach (var value in parameter.Value)
                 {
                     if (!File.Exists(value) && !Directory.Exists(value))
                     {
-                        Utils.Write($@"A file or directory named {value} does not exists.", true);
+                        Utils.Write($@"A file or directory named {value} does not exists.", true, true);
                     }
                     if (File.Exists(value))
                     {
@@ -248,10 +266,10 @@ namespace Azurlane
             if (Ok && !OpContains(Options.AssetBundleRepack) && !OpContains(Options.AssetBundleDecrypt) && !OpContains(Options.AssetBundleEncrypt))
             {
                 Console.WriteLine();
-                Utils.Write($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done", true);
+                Utils.Write($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done", true, true);
 
                 if (!DevelopmentMode && !OpContains(Options.AssetBundleUnpack))
-                    Utils.Write("Success: {0} - Failed: {1}", true, LuaMgr.SuccessCount, LuaMgr.FailedCount);
+                    Utils.Write("Success: {0} - Failed: {1}", true, true, LuaMgr.SuccessCount, LuaMgr.FailedCount);
             }
         }
 

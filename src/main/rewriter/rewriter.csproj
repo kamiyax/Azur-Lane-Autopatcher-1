@@ -7,7 +7,7 @@
     <ProjectGuid>{93EC7EA6-3FAD-4296-9FA9-A348F7C70068}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Rewriter</RootNamespace>
-    <AssemblyName>Rewriter</AssemblyName>
+    <AssemblyName>Azrewriter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

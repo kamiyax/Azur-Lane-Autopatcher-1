@@ -61,20 +61,38 @@ namespace Azurlane.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to github.com/k0np4ku.
+        /// </summary>
+        internal static string Author {
+            get {
+                return ResourceManager.GetString("Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/status.txt.
         /// </summary>
-        internal static string cliStatus {
+        internal static string CliStatus {
             get {
-                return ResourceManager.GetString("cliStatus", resourceCulture);
+                return ResourceManager.GetString("CliStatus", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/version.txt.
         /// </summary>
-        internal static string cliVersion {
+        internal static string CliVersion {
             get {
-                return ResourceManager.GetString("cliVersion", resourceCulture);
+                return ResourceManager.GetString("CliVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found: LuaJIT Raw-Bytecode Decompiler (ljd).
+        /// </summary>
+        internal static string LjdNotFoundMessage {
+            get {
+                return ResourceManager.GetString("LjdNotFoundMessage", resourceCulture);
             }
         }
         
@@ -89,12 +107,57 @@ namespace Azurlane.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not found: LuaJIT Just-In-Time Compiler.
+        /// </summary>
+        internal static string LuajitNotFoundMessage {
+            get {
+                return ResourceManager.GetString("LuajitNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to github.com/k0np4ku/Azur-Lane-Autopatcher.
+        /// </summary>
+        internal static string Repository {
+            get {
+                return ResourceManager.GetString("Repository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Salt {
             get {
                 object obj = ResourceManager.GetObject("Salt", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install the latest version of Python to solve this issue.
+        /// </summary>
+        internal static string SolutionPythonMessage {
+            get {
+                return ResourceManager.GetString("SolutionPythonMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refer to one of k0np4ku&apos;s repository to solve this issue.
+        /// </summary>
+        internal static string SolutionReferMessage {
+            get {
+                return ResourceManager.GetString("SolutionReferMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found: UnityEx.exe.
+        /// </summary>
+        internal static string UnityExNotFoundMessage {
+            get {
+                return ResourceManager.GetString("UnityExNotFoundMessage", resourceCulture);
             }
         }
         
