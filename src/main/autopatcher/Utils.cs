@@ -9,13 +9,13 @@ namespace Azurlane
         /// <summary>
         /// Run a command
         /// </summary>
-        internal static void Command(string argument, string workingDirectory = null)
+        internal static void Command(string argument)
         {
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "cmd";
                 process.StartInfo.Arguments = $"/c {argument}";
-                process.StartInfo.WorkingDirectory = workingDirectory ?? PathMgr.Thirdparty();
+                process.StartInfo.WorkingDirectory = PathMgr.Thirdparty();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = true;
 
@@ -28,7 +28,7 @@ namespace Azurlane
         /// Send a debug message to the terminal
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="writeLine"></param>
+        /// /// <param name="writeLine"></param>
         /// <param name="arg"></param>
         internal static void LogDebug(string message, bool writeLine, params object[] arg) => Write($@"[{DateTime.Now:HH:mm}][DEBUG]> {message}", writeLine, arg);
 
@@ -37,27 +37,21 @@ namespace Azurlane
             // Send a debug message to terminal
             LogDebug(message, true);
 
-            // Checking whether Logs.txt is in local folder
+            // Checking whether Logs.txt is exists in local folder
             if (!File.Exists(PathMgr.Local("Logs.txt")))
                 // Create an empty Logs.txt if file not exists
                 File.WriteAllText(PathMgr.Local("Logs.txt"), string.Empty);
 
-            try
+            using (var streamWriter = new StreamWriter(PathMgr.Local("Logs.txt"), true))
             {
-                using (var streamWriter = new StreamWriter(PathMgr.Local("Logs.txt"), true))
-                {
-                    streamWriter.WriteLine(
-                        "=== START ==============================================================================");
-                    streamWriter.WriteLine(message);
-                    streamWriter.WriteLine($"Date: {DateTime.Now.ToString()}");
-                    streamWriter.WriteLine($"Exception Message: {exception.Message}");
-                    streamWriter.WriteLine($"Exception StackTrace: {exception.StackTrace}");
-                    streamWriter.WriteLine(
-                        "=== END ================================================================================");
-                    streamWriter.WriteLine();
-                }
+                streamWriter.WriteLine("=== START ==============================================================================");
+                streamWriter.WriteLine(message);
+                streamWriter.WriteLine($"Date: {DateTime.Now.ToString()}");
+                streamWriter.WriteLine($"Exception Message: {exception.Message}");
+                streamWriter.WriteLine($"Exception StackTrace: {exception.StackTrace}");
+                streamWriter.WriteLine("=== END ================================================================================");
+                streamWriter.WriteLine();
             }
-            catch (Exception e) { }
         }
 
         /// <summary>

@@ -61,6 +61,24 @@ namespace Azurlane.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/status.txt.
+        /// </summary>
+        internal static string cliStatus {
+            get {
+                return ResourceManager.GetString("cliStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/cli/version.txt.
+        /// </summary>
+        internal static string cliVersion {
+            get {
+                return ResourceManager.GetString("cliVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] Lock {

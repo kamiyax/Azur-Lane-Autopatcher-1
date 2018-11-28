@@ -20,14 +20,10 @@ namespace Azurlane
     {
         internal static bool DevelopmentMode;
         internal static bool Ok = false;
-        private static bool _abort;
-
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
-
-        //private static readonly Dictionary<string, List<string>> Parameters = new Dictionary<string, List<string>>();
         private static readonly Dictionary<Options, List<string>> Parameters = new Dictionary<Options, List<string>>();
 
-        //private static string _currentOption;
+        private static bool _abort;
         private static Options _currentOption = Options.None;
 
         private enum Options
@@ -43,6 +39,14 @@ namespace Azurlane
             AssetBundleRepack,
         }
 
+        private static void Help(OptionSet options)
+        {
+            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
+            Console.WriteLine();
+            Utils.Write("Options:", true);
+            options.WriteOptionDescriptions(Console.Out);
+        }
+
         private static void Initialize()
         {
             ConfigMgr.Initialize();
@@ -50,7 +54,34 @@ namespace Azurlane
             var missingCount = 0;
             double pythonVersion;
 
-            // Checking python version
+            try
+            {
+                using (var wc = new System.Net.WebClient())
+                {
+                    var latestStatus = wc.DownloadString(Properties.Resources.cliStatus);
+                    if (latestStatus != "ok")
+                    {
+                        _abort = true;
+                        return;
+                    }
+
+                    var latestVersion = wc.DownloadString(Properties.Resources.cliVersion);
+                    if (ConfigMgr.Version != latestVersion)
+                    {
+                        Utils.LogDebug("Cli is outdated - current: {0} - expected: {0}", true, ConfigMgr.Version,
+                            latestVersion);
+                        Utils.LogInfo("Get the latest version from one of k0np4ku's repository", true);
+                        missingCount++;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.LogException("Exception detected during initialization", e);
+                _abort = true;
+                return;
+            }
+
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "python";
@@ -63,7 +94,8 @@ namespace Azurlane
                 var result = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
 
-                if (result.Contains("Python")) pythonVersion = Convert.ToDouble(result.Split(' ')[1].Remove(3));
+                if (result.Contains("Python"))
+                    pythonVersion = Convert.ToDouble(result.Split(' ')[1].Remove(3));
                 else pythonVersion = -0.0;
             }
 
@@ -109,17 +141,14 @@ namespace Azurlane
             }
         }
 
-        internal static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            // Dependency checker
             Initialize();
-            
+
             if (_abort) return;
 
-            // Check whether arguments are valid by counting the length
             var showHelp = args.Length < 2;
 
-            // Initialize options
             var options = new OptionSet()
             {
                 {"u|unlock", "Decrypt Lua", v => SetOption(Options.LuaUnlock)},
@@ -156,61 +185,21 @@ namespace Azurlane
                 }}
             };
 
-            // Initialize options
-            /* var options = new OptionSet()
-            {
-                {"u|unlock", "Decrypt Lua", v => _currentOption = "lua.unlock"},
-                {"l|lock", "Encrypt Lua", v => _currentOption = "lua.lock"},
-                {"d|decompile", "Decompile Lua", v => _currentOption = "lua.decompile"},
-                {"r|recompile", "Recompile Lua", v => _currentOption = "lua.recompile"},
-                {"decrypt", "Decrypt AssetBundle",  v => _currentOption = "assetbundle.decrypt"},
-                {"encrypt", "Encrypt AssetBundle", v => _currentOption = "assetbundle.encrypt"},
-                {"unpack", "Unpack all lua from AssetBundle", v => _currentOption = "assetbundle.unpack"},
-                {"repack", "Repack all lua from AssetBundle", v => _currentOption = "assetbundle.repack"},
-                {"u2|unlock2", "Decrypt Lua (Development)", v => _currentOption = "lua.dev.unlock"},
-                {"l2|lock2", "Encrypt Lua (Development)", v => _currentOption = "lua.dev.lock"},
-                {"d2|decompile2", "Decompile Lua (Development)", v => _currentOption = "lua.dev.decompile"},
-                {"r2|recompile2", "Recompile Lua (Development)", v => _currentOption = "lua.dev.recompile"},
-                {"decrypt2", "Decrypt AssetBundle (Development)",  v => _currentOption = "assetbundle.dev.decrypt"},
-                {"encrypt2", "Encrypt AssetBundle (Development)", v => _currentOption = "assetbundle.dev.encrypt"},
-                {"unpack2", "Unpack all lua from AssetBundle (Development)", v => _currentOption = "assetbundle.dev.unpack"},
-                {"repack2", "Repack all lua from AssetBundle (Development)", v => _currentOption = "assetbundle.dev.repack"},
-                {"<>", v => {
-                    if (_currentOption == null) {
-                        showHelp = true;
-                        return;
-                    }
-
-                    if (Parameters.TryGetValue(_currentOption, out var values))
-                    {
-                        values.Add(v);
-                    }
-                    else
-                    {
-                        values = new List<string> { v };
-                        Parameters.Add(_currentOption, values);
-                    }
-                }}
-            };*/
-
-            // If showHelp return true, then print message and abort
             if (showHelp)
             {
-                Help(options); // print message
-                return; // abort
+                Help(options);
+                return;
             }
 
             try
             {
-                options.Parse(args); // Trying to parse options
+                options.Parse(args);
             }
             catch (OptionException e)
             {
-                // Catch unexpected exception
                 Utils.LogException("Exception detected during parsing options", e);
             }
 
-            // Iterate through parameter in parameters (dictionary)
             foreach (var parameter in Parameters)
             {
                 foreach (var value in parameter.Value)
@@ -259,18 +248,6 @@ namespace Azurlane
                 if (!DevelopmentMode && !OpContains(Options.AssetBundleUnpack))
                     Utils.Write("Success: {0} - Failed: {1}", true, LuaMgr.SuccessCount, LuaMgr.FailedCount);
             }
-        }
-
-        /// <summary>
-        /// Print help message to the terminal
-        /// </summary>
-        /// <param name="options"></param>
-        private static void Help(OptionSet options)
-        {
-            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
-            Console.WriteLine();
-            Utils.Write("Options:", true);
-            options.WriteOptionDescriptions(Console.Out);
         }
 
         private static bool OpContains(Options option) => _currentOption == option;
