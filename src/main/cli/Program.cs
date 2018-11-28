@@ -20,6 +20,7 @@ namespace Azurlane
     {
         internal static bool DevelopmentMode;
         internal static bool Ok = false;
+
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
         private static readonly Dictionary<Options, List<string>> Parameters = new Dictionary<Options, List<string>>();
 
@@ -39,21 +40,8 @@ namespace Azurlane
             AssetBundleRepack,
         }
 
-        private static void Help(OptionSet options)
+        private static void CheckVersion()
         {
-            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
-            Console.WriteLine();
-            Utils.Write("Options:", true);
-            options.WriteOptionDescriptions(Console.Out);
-        }
-
-        private static void Initialize()
-        {
-            ConfigMgr.Initialize();
-
-            var missingCount = 0;
-            double pythonVersion;
-
             try
             {
                 using (var wc = new System.Net.WebClient())
@@ -68,35 +56,57 @@ namespace Azurlane
                     var latestVersion = wc.DownloadString(Properties.Resources.cliVersion);
                     if (ConfigMgr.Version != latestVersion)
                     {
-                        Utils.LogDebug("Cli is outdated - current: {0} - expected: {0}", true, ConfigMgr.Version,
-                            latestVersion);
-                        Utils.LogInfo("Get the latest version from one of k0np4ku's repository", true);
-                        missingCount++;
+                        Utils.Write("[Obsolete CLI version]", true);
+                        Utils.Write("Download the latest version from:", true);
+                        Utils.Write("github.com/k0np4ku/Azur-Lane-Autopatcher", true);
+                        _abort = true;
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Utils.LogException("Exception detected during initialization", e);
                 _abort = true;
-                return;
             }
+        }
 
-            using (var process = new Process())
+        private static void Help(OptionSet options)
+        {
+            Utils.Write("Usage: Azurlane.exe <option> <path-to-file(s) or path-to-directory(s)>", true);
+            Console.WriteLine();
+            Utils.Write("Options:", true);
+            options.WriteOptionDescriptions(Console.Out);
+        }
+
+        private static void Initialize()
+        {
+            CheckVersion();
+            ConfigMgr.Initialize();
+
+            var missingCount = 0;
+            var pythonVersion = 0.0;
+
+            try
             {
-                process.StartInfo.FileName = "python";
-                process.StartInfo.Arguments = "--version";
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.UseShellExecute = false;
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = "python";
+                    process.StartInfo.Arguments = "--version";
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.UseShellExecute = false;
 
-                process.Start();
-                var result = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
+                    process.Start();
+                    var result = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
 
-                if (result.Contains("Python"))
-                    pythonVersion = Convert.ToDouble(result.Split(' ')[1].Remove(3));
-                else pythonVersion = -0.0;
+                    if (result.Contains("Python"))
+                        pythonVersion = Convert.ToDouble(result.Split(' ')[1].Remove(3));
+                    else pythonVersion = -0.0;
+                }
+            }
+            catch
+            {
+                // Empty
             }
 
             if (pythonVersion.Equals(0.0) || pythonVersion.Equals(-0.0))
@@ -134,21 +144,16 @@ namespace Azurlane
             }
 
             if (missingCount > 0)
-            {
                 _abort = true;
-                Console.WriteLine();
-                Utils.Write("Aborted.", true);
-            }
         }
 
         private static void Main(string[] args)
         {
             Initialize();
-
-            if (_abort) return;
+            if (_abort)
+                return;
 
             var showHelp = args.Length < 2;
-
             var options = new OptionSet()
             {
                 {"u|unlock", "Decrypt Lua", v => SetOption(Options.LuaUnlock)},
@@ -255,8 +260,6 @@ namespace Azurlane
         private static bool OpContains(Options option, string key) => option.ToString().Contains(key);
 
         private static bool OpContains(string key) => _currentOption.ToString().Contains(key);
-
-        //private static bool OpContains(string key1, string key2) => OpContains(key1) && OpContains(key2);
 
         private static void SetOption(Options option, bool devMode = false)
         {

@@ -5,8 +5,8 @@ namespace Azurlane
 {
     public class ConfigMgr
     {
-        internal static string Version = "2018.11.28.01";
         internal static string ThirdpartyFolder;
+        internal static string Version = "2018.11.28.01";
         private static readonly Dictionary<string, string> Instance;
 
         static ConfigMgr()

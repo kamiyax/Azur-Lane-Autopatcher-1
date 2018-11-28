@@ -23,8 +23,8 @@ namespace Azurlane
 
         internal static string Lua(string name, string lua) => Path.Combine(Lua(name), lua);
 
-        internal static string Temp(string path = null) => path != null ? Path.Combine(Local(ConfigMgr.TemporaryFolder), path) : Local(ConfigMgr.TemporaryFolder);
+        internal static string Temp(string path = null) => path != null ? Path.Combine(Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Temporary_Folder)), path) : Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Temporary_Folder));
 
-        internal static string Thirdparty(string path = null) => path != null ? Path.Combine(Local(ConfigMgr.ThirdpartyFolder), path) : Local(ConfigMgr.ThirdpartyFolder);
+        internal static string Thirdparty(string path = null) => path != null ? Path.Combine(Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Thirdparty_Folder)), path) : Local((string)ConfigMgr.GetValue(ConfigMgr.Key.Thirdparty_Folder));
     }
 }

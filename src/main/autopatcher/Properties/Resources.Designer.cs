@@ -61,6 +61,24 @@ namespace Azurlane.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/autopatcher/status.txt.
+        /// </summary>
+        internal static string autopatcherStatus {
+            get {
+                return ResourceManager.GetString("autopatcherStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://raw.githubusercontent.com/k0np4ku/Azur-Lane-Autopatcher/master/src/main/autopatcher/version.txt.
+        /// </summary>
+        internal static string autopatcherVersion {
+            get {
+                return ResourceManager.GetString("autopatcherVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [Path]
         ///temporary_folder=tmp
         ///3rdparty_folder=3rdparty.
