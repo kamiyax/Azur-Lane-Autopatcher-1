@@ -1,5 +1,5 @@
 # Azur-Lane-Autopatcher
-Not even finished.
+This repository is half-completed and won't receive any updates. The most important stuff has been completed but I won't be published the source code of the new rewriter and unity library anytime soon.
 
 ## System Requirements
 - [NET Framework 4.6.1 or newer](https://www.microsoft.com/net/download/dotnet-framework-runtime)
