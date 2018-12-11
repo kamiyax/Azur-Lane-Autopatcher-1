@@ -18,8 +18,8 @@ namespace Azurlane
 
     public class Program
     {
-        internal static bool DevelopmentMode;
-        internal static bool Ok = false;
+        internal static bool IsDevMode;
+        internal static bool IsValid = false;
 
         private static readonly List<string> ListOfAssetBundle = new List<string>(), ListOfLua = new List<string>();
         private static readonly Dictionary<Options, List<string>> Parameters = new Dictionary<Options, List<string>>();
@@ -113,14 +113,11 @@ namespace Azurlane
             {
                 using (var wc = new System.Net.WebClient())
                 {
-                    if (!DevelopmentMode)
+                    var latestStatus = wc.DownloadString(Properties.Resources.CliStatus);
+                    if (latestStatus != "ok")
                     {
-                        var latestStatus = wc.DownloadString(Properties.Resources.CliStatus);
-                        if (latestStatus != "ok")
-                        {
-                            _abort = true;
-                            return;
-                        }
+                        _abort = true;
+                        return;
                     }
 
                     var latestVersion = wc.DownloadString(Properties.Resources.CliVersion);
@@ -137,15 +134,6 @@ namespace Azurlane
             {
                 _abort = true;
             }
-        }
-
-        private static void Message()
-        {
-            Utils.Write("", true, true);
-            Utils.Write("Azurlane Autopatcher", true, true);
-            Utils.Write("Version {0}", true, true, ConfigMgr.GetValue(ConfigMgr.Key.Version));
-            Utils.Write("{0}", true, true, Properties.Resources.Author);
-            Utils.Write("", true, true);
         }
 
         private static void Help(OptionSet options)
@@ -172,22 +160,15 @@ namespace Azurlane
             var showHelp = args.Length < 2;
             var options = new OptionSet()
             {
-                {"u|unlock", "Decrypt Lua", v => SetOption(Options.LuaUnlock)},
-                {"l|lock", "Encrypt Lua", v => SetOption(Options.LuaLock)},
-                {"d|decompile", "Decompile Lua", v => SetOption(Options.LuaDecompile)},
-                {"r|recompile", "Recompile Lua", v => SetOption(Options.LuaRecompile)},
-                {"decrypt", "Decrypt AssetBundle", v => SetOption(Options.AssetBundleDecrypt)},
-                {"encrypt", "Encrypt AssetBundle", v => SetOption(Options.AssetBundleEncrypt)},
-                {"unpack", "Unpack AssetBundle", v => SetOption(Options.AssetBundleUnpack)},
-                {"repack", "Repack AssetBundle", v => SetOption(Options.AssetBundleRepack)},
-                {"dev1", "Decrypt Lua (Development Mode)", v => SetOption(Options.LuaUnlock, true)},
-                {"dev2", "Encrypt Lua (Development Mode)", v => SetOption(Options.LuaLock, true)},
-                {"dev3", "Decompile Lua (Development Mode)", v => SetOption(Options.LuaDecompile, true)},
-                {"dev4", "Recompile Lua (Development Mode)", v => SetOption(Options.LuaRecompile, true)},
-                {"dev5", "Decrypt AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleDecrypt, true)},
-                {"dev6", "Encrypt AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleEncrypt, true)},
-                {"dev7", "Unpack AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleUnpack, true)},
-                {"dev8", "Repack AssetBundle (Development Mode)", v => SetOption(Options.AssetBundleRepack, true)},
+                {"dev", "Development Mode", v => IsDevMode = true},
+                {"u|unlock", "Decrypt Lua", v => _currentOption = Options.LuaUnlock},
+                {"l|lock", "Encrypt Lua", v => _currentOption = Options.LuaLock},
+                {"d|decompile", "Decompile Lua", v => _currentOption = Options.LuaDecompile},
+                {"r|recompile", "Recompile Lua", v => _currentOption = Options.LuaRecompile},
+                {"decrypt", "Decrypt AssetBundle", v => _currentOption = Options.AssetBundleDecrypt},
+                {"encrypt", "Encrypt AssetBundle", v => _currentOption = Options.AssetBundleEncrypt},
+                {"unpack", "Unpack AssetBundle", v => _currentOption = Options.AssetBundleUnpack},
+                {"repack", "Repack AssetBundle", v => _currentOption = Options.AssetBundleRepack},
                 {"<>", v => {
                     if (_currentOption == Options.None) {
                         showHelp = true;
@@ -263,14 +244,23 @@ namespace Azurlane
                     AssetBundleMgr.Initialize(assetbundle, OpContains(Options.AssetBundleDecrypt) ? Tasks.Decrypt : OpContains(Options.AssetBundleEncrypt) ? Tasks.Encrypt : OpContains(Options.AssetBundleUnpack) ? Tasks.Unpack : Tasks.Repack);
             }
 
-            if (Ok && !OpContains(Options.AssetBundleRepack) && !OpContains(Options.AssetBundleDecrypt) && !OpContains(Options.AssetBundleEncrypt))
+            if (IsValid && !OpContains(Options.AssetBundleRepack) && !OpContains(Options.AssetBundleDecrypt) && !OpContains(Options.AssetBundleEncrypt))
             {
                 Console.WriteLine();
                 Utils.Write($"{(OpContains(Options.LuaUnlock) || OpContains(Options.AssetBundleDecrypt) ? "Decrypt" : OpContains(Options.LuaLock) || OpContains(Options.AssetBundleEncrypt) ? "Encrypt" : OpContains(Options.LuaDecompile) ? "Decompile" : OpContains(Options.LuaRecompile) ? "Recompile" : OpContains(Options.AssetBundleUnpack) ? "Unpacking" : "Repacking")} {(OpContains(_currentOption, "Lua") ? string.Empty : "assetbundle ")}is done", true, true);
 
-                if (!DevelopmentMode && !OpContains(Options.AssetBundleUnpack))
+                if (!IsDevMode && !OpContains(Options.AssetBundleUnpack))
                     Utils.Write("Success: {0} - Failed: {1}", true, true, LuaMgr.SuccessCount, LuaMgr.FailedCount);
             }
+        }
+
+        private static void Message()
+        {
+            Utils.Write("", true, true);
+            Utils.Write("Azur Lane Command Line Tool", true, true);
+            Utils.Write("Version {0}", true, true, ConfigMgr.GetValue(ConfigMgr.Key.Version));
+            Utils.Write("{0}", true, true, Properties.Resources.Author);
+            Utils.Write("", true, true);
         }
 
         private static bool OpContains(Options option) => _currentOption == option;
@@ -278,12 +268,5 @@ namespace Azurlane
         private static bool OpContains(Options option, string key) => option.ToString().Contains(key);
 
         private static bool OpContains(string key) => _currentOption.ToString().Contains(key);
-
-        private static void SetOption(Options option, bool devMode = false)
-        {
-            _currentOption = option;
-            if (devMode)
-                DevelopmentMode = true;
-        }
     }
 }

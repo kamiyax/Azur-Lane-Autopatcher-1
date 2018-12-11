@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("autopatcher")]
+[assembly: AssemblyTitle("Azur Lane Scripts Autopatcher")]
 [assembly: AssemblyDescription("https://github.com/k0np4ku")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("autopatcher")]
+[assembly: AssemblyProduct("Azur Lane Scripts Autopatcher")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

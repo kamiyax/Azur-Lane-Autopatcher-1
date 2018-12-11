@@ -1,8 +1,9 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Azurlane
@@ -236,6 +237,7 @@ namespace Azurlane
             if (!Directory.Exists(PathMgr.Temp()))
                 Directory.CreateDirectory(PathMgr.Temp());
 
+            var startTime = DateTime.Now;
             var index = 1;
             if (_listOfAction == null)
             {
@@ -258,7 +260,7 @@ namespace Azurlane
                     {
                         try {
                             Utils.LogInfo("Decrypting AssetBundle...", true, false);
-                            Utils.Command($"Azcli.exe --dev5 \"{PathMgr.Temp(fileName)}\"");
+                            //Utils.Command($"Azcmd.exe --dev --decrypt \"{PathMgr.Temp(fileName)}\"");
                             Utils.Write(" <done>", false, true);
                         }
                         catch (Exception e)
@@ -271,7 +273,7 @@ namespace Azurlane
                     {
                         try {
                             Utils.LogInfo("Unpacking AssetBundle...", true, false);
-                            Utils.Command($"Azcli.exe --dev7 \"{PathMgr.Temp(fileName)}\"");
+                            Utils.Command($"Azcmd.exe --dev --unpack \"{PathMgr.Temp(fileName)}\"");
                             Utils.Write(" <done>", false, true);
                         }
                         catch (Exception e)
@@ -286,7 +288,7 @@ namespace Azurlane
                             var showDoneMessage = true;
                             Utils.LogInfo("Decrypting Lua...", true, false);
                             foreach (var lua in ListOfLua) {
-                                Utils.Command($"Azcli.exe --dev1 \"{PathMgr.Lua(fileName, lua)}\"");
+                                Utils.Command($"Azcmd.exe --dev --unlock \"{PathMgr.Lua(fileName, lua)}\"");
 
                                 if (LuaMgr.CheckLuaState(PathMgr.Lua(fileName, lua)) != LuaMgr.State.Encrypted)
                                     break;
@@ -308,11 +310,16 @@ namespace Azurlane
                     {
                         try {
                             Utils.LogInfo("Decompiling Lua...", true, false);
+                            var tasks = new List<Task>();
                             foreach (var lua in ListOfLua) {
-                                Utils.Write($@" {index}/{ListOfLua.Count}", false, false);
-                                Utils.Command($"Azcli.exe --dev3 \"{PathMgr.Lua(fileName, lua)}\"");
-                                index++;
+                                tasks.Add(Task.Factory.StartNew(() =>
+                                {
+                                    Utils.Command($"Azcmd.exe --dev --decompile \"{PathMgr.Lua(fileName, lua)}\"");
+                                    Utils.Write($@" {index}/{ListOfLua.Count}", false, false);
+                                    index++;
+                                }));
                             }
+                            Task.WaitAll(tasks.ToArray());
                             Utils.Write(" <done>", false, true);
                         }
                         catch (Exception e)
@@ -379,15 +386,20 @@ namespace Azurlane
                     {
                         try {
                             Utils.LogInfo("Recompiling Lua...", true, false);
+                            var tasks = new List<Task>();
                             foreach (var mod in ListOfMod)
                             {
                                 if (!mod.Value)
                                     break;
 
                                 var modName = ("scripts-" + mod.Key).ToLower().Replace("_", "-");
-                                foreach (var lua in ListOfLua)
-                                    Utils.Command($"Azcli.exe --dev4 \"{PathMgr.Lua(modName, lua)}\"");
+                                foreach (var lua in ListOfLua) {
+                                    tasks.Add(Task.Factory.StartNew(() =>
+                                    {
+                                    }));
+                                }
                             }
+                            Task.WaitAll(tasks.ToArray());
                             Utils.Write(" <done>", false, true);
                         }
                         catch (Exception e)
@@ -409,7 +421,7 @@ namespace Azurlane
                                 var modName = ("scripts-" + mod.Key).ToLower().Replace("_", "-");
 
                                 foreach (var lua in ListOfLua) {
-                                    Utils.Command($"Azcli.exe --dev2 \"{PathMgr.Lua(modName, lua)}\"");
+                                    Utils.Command($"Azcmd.exe --dev --lock \"{PathMgr.Lua(modName, lua)}\"");
 
                                     if (LuaMgr.CheckLuaState(PathMgr.Lua(modName, lua)) != LuaMgr.State.Decrypted)
                                         break;
@@ -432,6 +444,7 @@ namespace Azurlane
                     {
                         try {
                             Utils.LogInfo("Repacking AssetBundle...", true, false);
+                            var tasks = new List<Task>();
                             foreach (var mod in ListOfMod)
                             {
                                 if (!mod.Value)
@@ -439,10 +452,14 @@ namespace Azurlane
 
                                 var modName = ("scripts-" + mod.Key).ToLower().Replace("_", "-");
 
-                                Utils.Write($@" {index}/{ListOfMod.Count(x => x.Value)}", false, false);
-                                Utils.Command($"Azcli.exe --dev8 \"{PathMgr.Temp(modName)}\"");
-                                index++;
+                                tasks.Add(Task.Factory.StartNew(() =>
+                                {
+                                    Utils.Command($"Azcmd.exe --dev --repack \"{PathMgr.Temp(modName)}\"");
+                                    Utils.Write($@" {index}/{ListOfMod.Count(x => x.Value)}", false, false);
+                                    index++;
+                                }));
                             }
+                            Task.WaitAll(tasks.ToArray());
                             Utils.Write(" <done>", false, true);
                         }
                         catch (Exception e)
@@ -461,7 +478,7 @@ namespace Azurlane
                                     break;
 
                                 var modName = ("scripts-" + mod.Key).ToLower().Replace("_", "-");
-                                Utils.Command($"Azcli.exe --dev6 \"{PathMgr.Temp(modName)}\"");
+                                Utils.Command($"Azcmd.exe --dev --encrypt \"{PathMgr.Temp(modName)}\"");
                             }
                             Utils.Write(" <done>", false, true);
                         }
@@ -505,7 +522,6 @@ namespace Azurlane
                     if (Abort)
                         break;
                     index = 1;
-                    action.Invoke();
                 }
             }
             finally
@@ -515,6 +531,14 @@ namespace Azurlane
 
                 Console.WriteLine();
                 Utils.Write("Finished.", true, true);
+
+                var endTime = DateTime.Now;
+                TimeSpan timeSpan = endTime - startTime;
+                Utils.Write("Started at {0} - Ended at {1}", true, true, startTime.ToString("HH:mm"), endTime.ToString("HH:mm"));
+                Utils.Write("{0} seconds elapsed.", true, true, timeSpan.TotalSeconds.ToString());
+
+                Console.WriteLine(); // Please don't delete this lol
+                Utils.Write("Good work (even though you have done nothing at all).", true, true);
             }
 
         END:
@@ -532,3 +556,4 @@ namespace Azurlane
         }
     }
 }
+*/

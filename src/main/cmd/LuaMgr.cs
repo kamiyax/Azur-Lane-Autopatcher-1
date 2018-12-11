@@ -22,68 +22,44 @@ namespace Azurlane
         /// <param name="task"></param>
         internal static void Initialize(string lua, Tasks task)
         {
-            // Read all bytes of a binary and store them into memory
             var bytes = File.ReadAllBytes(lua);
 
-            // Declare the state of the binary as unknown (none)
             var state = State.None;
-
-            // Check whether the 3rd byte of the binary is 0x80
             if (bytes[3] == 0x80)
             {
-                // Change the state of the binary to encrypted
                 state = State.Encrypted;
-
-                // Check whether our task is to encrypt the binary
                 if (task == Tasks.Encrypt)
                 {
-                    // Abort because the binary is already encrypted
                     Utils.LogInfo("{0} is already encrypted... <aborted>", true, true, Path.GetFileName(lua).Replace(".txt", string.Empty));
                     return;
                 }
-                // Check whether our task is to decompile the binary
                 if (task == Tasks.Decompile)
-                {
-                    // Call Executor.2 (Decrypt the binary before processing it)
                     Execute(lua, bytes, Tasks.Decrypt, state);
-                }
             }
-            // Check whether the 3rd byte of the binary is 0x02
             else if (bytes[3] == 0x02)
             {
-                // Change the state of the binary to encrypted
                 state = State.Decrypted;
-
-                // Check whether our task is to decrypt the binary
                 if (task == Tasks.Decrypt)
                 {
-                    // Abort because the binary is already decrypted
                     Utils.LogInfo("{0} is already decrypted... <aborted>", true, true, Path.GetFileName(lua).Replace(".txt", string.Empty));
                     return;
                 }
             }
-            // Check whether our task is to recompile the binary
             else if (task != Tasks.Recompile)
             {
-                // Abort because the binary is invalid or damaged
                 Utils.LogInfo("Not a valid or damaged lua file... <aborted>", true, true);
                 return;
             }
 
-            // Check whether our task is to decrypt or encrypt the binary
             if (task == Tasks.Decrypt || task == Tasks.Encrypt)
             {
-                // Call Executor.1 (decryption/encryption)
                 Execute(lua, bytes, task, state);
             }
-            // Check whether our task is to decompile or recompile the binary
             else if (task == Tasks.Decompile || task == Tasks.Recompile)
             {
-                // Call Executor.1 (decompiler/recompiler)
                 Execute(lua, task);
             }
-            // Set the state of the program to true
-            Program.Ok = true;
+            Program.IsValid = true;
         }
 
         /// <summary>
@@ -96,7 +72,8 @@ namespace Azurlane
         private static void Execute(string lua, byte[] bytes, Tasks task, State state)
         {
             var luaPath = lua;
-            if (Program.DevelopmentMode == false)
+
+            if (Program.IsDevMode == false)
             {
                 luaPath = Path.Combine(PathMgr.Local(task == Tasks.Decrypt ? "decrypted_Lua" : "encrypted_lua"), Path.GetFileName(lua));
 
@@ -187,7 +164,7 @@ namespace Azurlane
         private static void Execute(string lua, Tasks task)
         {
             var luaPath = lua;
-            if (Program.DevelopmentMode == false)
+            if (Program.IsDevMode == false)
             {
                 if (lua.ToLower().Contains("unity_assets_files"))
                     lua = Path.Combine(PathMgr.Local("decrypted_lua"), Path.GetFileName(lua));

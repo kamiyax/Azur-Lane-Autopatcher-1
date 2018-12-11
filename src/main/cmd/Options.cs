@@ -283,15 +283,12 @@ namespace NDesk.Options
                         c.OptionName);
         }
 
-        public string this[int index]
-        {
-            get
-            {
+        public string this[int index] {
+            get {
                 AssertValid(index);
                 return index >= values.Count ? null : values[index];
             }
-            set
-            {
+            set {
                 values[index] = value;
             }
         }
@@ -328,31 +325,26 @@ namespace NDesk.Options
             this.c = new OptionValueCollection(this);
         }
 
-        public Option Option
-        {
+        public Option Option {
             get { return option; }
             set { option = value; }
         }
 
-        public string OptionName
-        {
+        public string OptionName {
             get { return name; }
             set { name = value; }
         }
 
-        public int OptionIndex
-        {
+        public int OptionIndex {
             get { return index; }
             set { index = value; }
         }
 
-        public OptionSet OptionSet
-        {
+        public OptionSet OptionSet {
             get { return set; }
         }
 
-        public OptionValueCollection OptionValues
-        {
+        public OptionValueCollection OptionValues {
             get { return c; }
         }
     }
@@ -573,8 +565,7 @@ namespace NDesk.Options
             this.option = info.GetString("OptionName");
         }
 
-        public string OptionName
-        {
+        public string OptionName {
             get { return this.option; }
         }
 
@@ -602,8 +593,7 @@ namespace NDesk.Options
 
         private Converter<string, string> localizer;
 
-        public Converter<string, string> MessageLocalizer
-        {
+        public Converter<string, string> MessageLocalizer {
             get { return localizer; }
         }
 

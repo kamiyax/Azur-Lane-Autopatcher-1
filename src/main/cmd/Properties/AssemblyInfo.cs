@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("cli")]
+[assembly: AssemblyTitle("Azur Lane Command Line Tool")]
 [assembly: AssemblyDescription("https://github.com/k0np4ku")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("cli")]
+[assembly: AssemblyProduct("Azur Lane Command Line Tool")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

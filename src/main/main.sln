@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "cli\cli.csproj", "{5C9E732B-9C5C-4612-936C-61C8CB9937D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cmd", "cmd\cmd.csproj", "{5C9E732B-9C5C-4612-936C-61C8CB9937D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rewriter", "rewriter\rewriter.csproj", "{93EC7EA6-3FAD-4296-9FA9-A348F7C70068}"
 EndProject
