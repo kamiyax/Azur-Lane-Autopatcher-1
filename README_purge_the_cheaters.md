@@ -23,7 +23,7 @@ Let's say, compare reload attribute of each weapon, then flag the user as a chea
 
 ---
 
-**Method 3:** Rename attributes to numeric.\
+**Method 3:** Rename attributes to numeric/store important attributes inside an array.\
 This will at least made the autopatcher no longer functionable and confuse those who able to modify the content.
 
 ---
